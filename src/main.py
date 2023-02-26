@@ -39,7 +39,7 @@ def dangnhap():
         password = request.form.get('cb_matkhau') 
         remember = request.form.get('remember')    
         quyentruycap = dp.login(username, password)
-        if quyentruycap != -1:
+        if quyentruycap != None and quyentruycap != -1:
             session['user'] = username
             session['type-account'] = quyentruycap
             session.permanent = True
