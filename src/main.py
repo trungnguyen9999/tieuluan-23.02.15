@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, session, Response
 import cv2
 from datetime import timedelta
 import dataprovider as dp
-import psycopg2
 
 app = Flask(__name__)
 app.secret_key = 'ntnguyen'
@@ -20,18 +19,18 @@ def index():
         return render_template('index.html')
     return render_template('login.html')
 
-@app.route('/khoa')
-def khoa():
-    conn = psycopg2.connect(database="db_diemdanhsinhvien",
-                            user="postgres",
-                            password="1234567",
-                            host="localhost", port="5432")
-    cur = conn.cursor()
-    cur.execute('''SELECT * FROM khoa''')
-    data = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('khoa.html', data=data)
+# @app.route('/khoa')
+# def khoa():
+    # conn = psycopg2.connect(database="db_diemdanhsinhvien",
+    #                         user="postgres",
+    #                         password="1234567",
+    #                         host="localhost", port="5432")
+    # cur = conn.cursor()
+    # cur.execute('''SELECT * FROM khoa''')
+    # data = cur.fetchall()
+    # cur.close()
+    # conn.close()
+    # return render_template('khoa.html', data=data)
 
 @app.route('/dang-nhap', methods=['GET', 'POST'])
 def dangnhap():
