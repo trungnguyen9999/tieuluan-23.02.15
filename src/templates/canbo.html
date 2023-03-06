@@ -1,0 +1,144 @@
+
+<div class="col" style="text-align: end;margin: 10px;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Thêm mới
+      </button>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 800px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cập nhật cán bộ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card-tao-canbo">
+              <div class="card-body">
+
+                <div class="pt-4 pb-2">
+                  <p class="text-center small">Điền thông tin chi tiết để tạo thông tin cán bộ - 
+                      <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                </div>
+
+                <form id="register-form" class="row g-3 needs-validation" action="/dang-ky" method="POST" onsubmit="return validForm(event)">
+                  <div class="col-6">
+                    <label for="txtTenDayDu" class="form-label">Họ và tên <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <input type="text" name="fullname" class="form-control" id="txtTenDayDu"> 
+                    <div style='color:red;' id="msgHoVaTen"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtEmail" class="form-label">Thư điện tử <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <span class="input-group-text" ><i class='ri-mail-line'></i></span>
+                      <input type="text" name="email" class="form-control" id="txtEmail">
+                    </div>
+                    <div style='color:red;' id="msgEmail"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtTenDangNhap" class="form-label">Tên đăng nhập <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <span class="input-group-text" >@</span>
+                      <input type="text" name="username" class="form-control" id="txtTenDangNhap">
+                    </div>
+                    <div style='color:red;' id="msgTenDangNhap"></div>
+                  </div>
+                  <div class="col-6">
+                      <label for="txtSoDienThoai" class="form-label">Điện thoại <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" ><i class='bi bi-telephone'></i></span>
+                        <input type="text" name="phonenumber" class="form-control" id="txtSoDienThoai">
+                      </div>
+                      <div style='color:red;' id="msgDienThoai"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtMatKhau" class="form-label">Mật khẩu <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <span class="input-group-text" id="inputGroupPrepend"><i class='bi bi-key'></i></span>
+                      <input type="password" name="password" class="form-control" id="txtMatKhau">
+                    </div>
+                    <div style='color:red;' id="msgMatKhau"></div>
+                  </div>
+                  <div class="col-6">
+                      <label for="inputDate" class="form-label">Ngày sinh <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend"><i class='bi bi-calendar-date'></i></span>
+                        <input type="date" class="form-control" name='birthdate' id='birthdate'>
+                      </div>
+                      <div style='color:red;' id="msgNgaySinh"></div>
+                    </div>
+                  <div class="col-6">
+                      <label for="txtReMatKhau" class="form-label">Xác nhận mật khẩu <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend"><i class='bi bi-key-fill'></i></span>
+                        <input type="password" name="repassword" class="form-control" id="txtReMatKhau">
+                      </div>
+                      <div style='color:red;' id="msgReMatKhau"></div>
+                  </div>
+                  <div class="col-6">
+                      <label for="txtDiaChi" class="form-label">Địa chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend"><i class='ri-user-location-line'></i></span>
+                        <input type="text" name="address" class="form-control" id="txtDiaChi">
+                      </div>
+                      <div style='color:red;' id="msgDiaChi"></div>
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-primary w-100" type="submit" >Tạo thông tin cán bộ</button>
+                  </div>
+                </form>
+
+              </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary">Cập nhật</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card">
+    <div class="card-body">
+      <!-- Table with stripped rows -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã số</th>
+            <th scope="col">Hộ tên</th>
+            <th scope="col">Ngày sinh</th>
+            <th scope="col">Email</th>
+            <th scope="col">Điện thoại</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col">Ngày tạo</th>
+            <th scope="col">Quyền</th>
+            <th scope="col">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for item in list_canbo  %}
+            <tr>
+                <th scope="row">1</th>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
+                <td>{{ item[3] }}</td>
+                <td>{{ item[4] }}</td>
+                <td>{{ item[5] }}</td>
+                <td>{{ item[6] }}</td>
+                <td>{{ item[7] }}</td>
+                {% if item[8] == 1 %}
+                    <td>Giảng viên</td>
+                {% endif %}
+                {% if item[8] == 2 %}
+                    <td>Quản trị</td>
+                {% endif %}
+                <td>{{ item[9] }}</td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+
+    </div>
+</div>

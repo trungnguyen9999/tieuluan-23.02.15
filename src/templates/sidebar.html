@@ -1,0 +1,105 @@
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/home">
+          <i class="bi bi-grid"></i>
+          <span>Bảng điều khiển</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#thongke-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>Thống kê - Báo cáo</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="thongke-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="forms-elements.html">
+              <i class="bi bi-circle"></i><span>Bảng điểm danh</span>
+            </a>
+          </li>
+          <li>
+            <a href="forms-layouts.html">
+              <i class="bi bi-circle"></i><span>Thống kê số buổi vằng</span>
+            </a>
+          </li>
+          <li>
+            <a href="forms-editors.html">
+              <i class="bi bi-circle"></i><span>Giờ dạy</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      {% if cb[9] == 2 %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#danhmuc-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-layout-text-window-reverse"></i><span>Danh mục</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="danhmuc-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="/can-bo">
+              <i class="bi bi-circle"></i><span>Cán bộ</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Sinh viên</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Lớp học</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Môn học</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Ngành học</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Khoa - Trung tâm</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#">
+          <i class="bi bi-table"></i><span>Thời khóa biểu</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#diemdanh-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-layout-text-window-reverse"></i><span>Điểm danh</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="diemdanh-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Điểm danh thủ công</span>
+            </a>
+          </li>
+          <li>
+            <a href="/diem-danh">
+              <i class="bi bi-circle"></i><span>Điểm danh bằng nhận diện khuôn mặt</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#">
+          <i class="bi bi-gear"></i><span>Cấu hình</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#">
+          <i class="bi bi-person"></i><span>Thông tin cá nhân</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+    </ul>
+  </aside>

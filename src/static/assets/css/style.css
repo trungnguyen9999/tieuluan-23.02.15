@@ -17,7 +17,7 @@
 
 .table-responsive {
   overflow-y: scroll;
-  max-height: 400px; /* set the height as per your requirement */
+  max-height: 350px; /* set the height as per your requirement */
 }
 
 body {
