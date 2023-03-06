@@ -10,8 +10,14 @@
 --------------------------------------------------------------*/
 
 
+
 :root {
   scroll-behavior: smooth;
+}
+
+.table-responsive {
+  overflow-y: scroll;
+  max-height: 400px; /* set the height as per your requirement */
 }
 
 body {
@@ -237,6 +243,11 @@ h6 {
 /* Card */
 .card {
   margin-bottom: 30px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+.card-tao-canbo {
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
