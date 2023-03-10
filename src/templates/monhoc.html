@@ -1,0 +1,213 @@
+
+<div class="col" style="text-align: start;margin: 10px;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Thêm mới
+      </button>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 800px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cập nhật môn học</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card-tao-canbo">
+              <div class="card-body">
+
+                <div class="pt-4 pb-2">
+                  <p class="text-center small">Điền thông tin chi tiết để tạo môn học - 
+                      <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                </div>
+
+                <form id="create-monhoc-form" class="row g-3 needs-validation"
+                 action="/create-mon-hoc" method="POST" onsubmit="return validForm(event)">
+                 
+                  <div class="col-6">
+                    <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <input type="text" name="maMon" class="form-control" id="txtmaMon"> 
+                    <div style='color:red;' id="msgMaMon"></div>
+                  </div>
+
+                  <div class="col-6">
+                    <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <input type="text" name="tenMon" class="form-control" id="txtTenMon">
+                    </div>
+                    <div style='color:red;' id="msgTenMon"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi">
+                    </div>
+                    <div style='color:red;' id="msgSoTinChi"></div>
+                  </div>
+                  <div class="col-6">
+                      <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet">
+                      </div>
+                      <div style='color:red;' id="msgLytThuyet"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh">
+                    </div>
+                    <div style='color:red;' id="msgThucHanh"></div>
+                  </div>
+                 
+                  <div class="col-12">
+                    <button class="btn btn-primary w-100" type="submit" >Tạo thông tin Môn học</button>
+                  </div>
+                </form>
+              </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<div class="card">
+    <div class="card-body">
+      <!-- Table with stripped rows -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Mã môn</th>
+            <th scope="col">Tên môn</th>
+            <th scope="col">Số tín chỉ</th>
+            <th scope="col">Lý thuyết</th>
+            <th scope="col">Thực hành</th>
+            <th scope="col">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for item in list_monhoc  %}
+            <tr>
+                <th scope="row">{{ item[0] }}</th>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
+                <td>{{ item[3] }}</td>
+                <td>{{ item[4] }}</td>
+                <td>{{ item[5] }}</td>
+                <td>
+                  <button class="btn btn-success w-40" type="button" data-bs-toggle="modal" data-bs-target="#updateModal{{item[0]}}" >Cập nhật</button>
+                  <button class="btn btn-danger w-25" >Xóa</button>
+                  
+                </td>
+            </tr>
+            <div class="modal fade" id="updateModal{{item[0]}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+              <div class="modal-dialog" style="max-width: 800px;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Cập nhật môn học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="card-tao-canbo">
+                        <div class="card-body">
+          
+                          <div class="pt-4 pb-2">
+                            <p class="text-center small">Điền thông tin chi tiết để cập nhật môn học - 
+                                <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                          </div>
+          
+                          <form id="update-monhoc-form" class="row g-3 needs-validation"
+                           action="/update-mon-hoc" method="POST" onsubmit="return validForm(event)">
+                           
+                            <div class="col-6">
+                              <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <input type="text" name="maMon" class="form-control" id="txtmaMon" value="{{item[1]}}"> 
+                              <div style='color:red;' id="msgMaMon"></div>
+                            </div>
+          
+                            <div class="col-6">
+                              <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="text" name="tenMon" class="form-control" id="txtTenMon" value="{{item[2]}}">
+                              </div>
+                              <div style='color:red;' id="msgTenMon"></div>
+                            </div>
+                            <div class="col-6">
+                              <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" value="{{item[3]}}">
+                              </div>
+                              <div style='color:red;' id="msgSoTinChi"></div>
+                            </div>
+                            <div class="col-6">
+                                <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" value="{{item[4]}}">
+                                </div>
+                                <div style='color:red;' id="msgLytThuyet"></div>
+                            </div>
+                            <div class="col-6">
+                              <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" value="{{item[5]}}">
+                              </div>
+                              <div style='color:red;' id="msgThucHanh"></div>
+                            </div>
+                           
+                            <div class="col-12">
+                              <button class="btn btn-primary w-100" type="submit" >Cập nhật môn học</button>
+                            </div>
+                          </form>
+                        </div>
+                        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+      
+    </div>
+</div>
+<script>
+  const maMon = document.getElementById("txtMaMon");
+  const tenMon = document.getElementById("txtTenMon");
+  const soTinChi = document.getElementById("txtSoTinChi");
+  const lyThuyet = document.getElementById("txtLyThuyet");
+  const thucHanh = document.getElementById("txtThucHanh");
+
+  const msgMaMon = document.getElementById("msgHoVaTen");
+  const msgTenMon = document.getElementById("msgTenDangNhap");
+  const msgSoTinChi = document.getElementById("msgMatKhau");
+  const msgLyThuyet = document.getElementById("msgReMatKhau");
+  const msgThucHanh = document.getElementById("msgEmail");
+
+  function validForm(e) {
+    let isValid = true;
+    if(maMon.value === ''){
+      isValid = false;
+      msgMaMon.textContent = 'Vui lòng điền mã môn !';
+    } else {
+      msgMaMon.textContent = '';
+    }
+
+    if(tenMon.value === ''){
+      isValid = false;
+      msgTenMon.textContent = 'Vui lòng điền tên môn!';
+    } else {
+      msgTenMon.textContent = '';
+    }
+    console.log(isValid); 
+    if(!isValid){
+      e.preventDefault(); 
+    }
+    return isValid;
+  } 
+
+    
+  </script>

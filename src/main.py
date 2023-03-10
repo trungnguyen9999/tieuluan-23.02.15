@@ -1,9 +1,10 @@
 
-from flask import Flask, render_template, request, redirect, session, Response
+from flask import Flask, render_template, request, redirect, session, Response, url_for, flash
 import cv2
 from datetime import timedelta, datetime
 import dataprovider as dp
 from model import CanBo as cb
+from model import MonHoc as mh
 
 app = Flask(__name__)
 app.secret_key = 'ntnguyen'
@@ -13,6 +14,7 @@ camera = cv2.VideoCapture(0)  # use 0 for web camera
 # user = {"cb_maso": "10067", "cb_matkhau": "nguyen@cusc"}
 
 canbo = cb.CanBo()
+monhoc = mh.MonHoc()
 
 @app.route('/')
 @app.route('/home')
@@ -99,6 +101,34 @@ def video_feed():
     if('user' in session):
         return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
     return render_template('login.html')
+
+#*********************************************** Môn Học**************************************************
+
+@app.route('/mon-hoc') 
+def list_monhoc():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học")
+    return render_template('login.html')
+
+@app.route('/create-mon-hoc', methods=['GET','POST'])
+def actionCreateMonHoc():
+    message = ""
+    mhMa = request.form.get('maMon')
+    mhTen = request.form.get('tenMon')
+    mhTinChi = request.form.get('soTinChi')
+    mhLyThuyet = request.form.get('lyThuyet')
+    mhThucHanh = request.form.get('thucHanh')    
+    monhoc = mh.MonHoc(mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
+    
+    if(monhoc.checkExitByMaMon()):
+       message = "Mã môn đã tồn tại"
+    else:
+        print("mã số không trùng")
+        monhoc.create()
+    
+    cbmaso = session['user']
+    return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học",mes =message)
 
 
 if __name__ == '__main__':
