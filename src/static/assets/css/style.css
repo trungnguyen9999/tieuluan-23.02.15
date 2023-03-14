@@ -14,7 +14,10 @@
 :root {
   scroll-behavior: smooth;
 }
-
+.visible {
+  height: 3em;
+  width: 10em;
+}
 .table-responsive {
   overflow-y: scroll;
   max-height: 350px; /* set the height as per your requirement */

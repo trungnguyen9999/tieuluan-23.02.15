@@ -1,0 +1,281 @@
+
+<div class="col" style="text-align: end;margin: 10px;">
+    <div class="row">
+        <div class="col-10">
+            <select class="form-control">
+              {% for item in list_lophoc %}
+              <option>{{ item[1] }} - {{ item[2] }}</option>
+              {% endfor%}
+            </select>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien">
+                Thêm mới
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="thongTinSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 800px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cập nhật sinh viên</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card-tao-canbo">
+              <div class="card-body">
+
+                <div class="pt-4 pb-2">
+                  <p class="text-center small">Điền thông tin chi tiết để cập nhật thông tin sinh viên - 
+                      <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                </div>
+
+                <form id="register-form" class="row g-3 needs-validation" action="/sinh-vien" method="POST" onsubmit="return validForm(event)">
+                  <div class="col-6">
+                    <label for="txtTenDayDu" class="form-label">Họ và tên <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <input type="text" name="fullname" class="form-control" id="txtTenDayDu"> 
+                    <div style='color:red;' id="msgHoVaTen"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtEmail" class="form-label">Thư điện tử <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <span class="input-group-text" ><i class='ri-mail-line'></i></span>
+                      <input type="text" name="email" class="form-control" id="txtEmail">
+                    </div>
+                    <div style='color:red;' id="msgEmail"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="txtTenDangNhap" class="form-label">Mã số<span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <input type="text" name="maso" class="form-control" id="txtMaSo">
+                    </div>
+                    <div style='color:red;' id="msgMaSo"></div>
+                  </div>
+                  <div class="col-6">
+                      <label for="txtSoDienThoai" class="form-label">Điện thoại <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" ><i class='bi bi-telephone'></i></span>
+                        <input type="text" name="phonenumber" class="form-control" id="txtSoDienThoai">
+                      </div>
+                      <div style='color:red;' id="msgDienThoai"></div>
+                  </div>
+                  <div class="col-6">
+                    <label for="lblLop" class="form-label">Lớp</label>
+                    <div class="input-group has-validation">
+                        <select class="form-control" name="lop" id="txtLop">
+                          {% for item in list_lophoc %}
+                          <option value="{{ item[0] }}">{{ item[1] }} - {{ item[2] }}</option>
+                          {% endfor%}
+                        </select>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                      <label for="inputDate" class="form-label">Ngày sinh <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend"><i class='bi bi-calendar-date'></i></span>
+                        <input type="date" class="form-control" name='birthdate' id='birthdate'>
+                      </div>
+                      <div style='color:red;' id="msgNgaySinh"></div>
+                    </div>
+                    <div class="col-6">
+                        <label for="txtSoDienThoai" class="form-label">Giới tính <span style='color:red;font-weight:700;'>(*)</span></label>
+                        <div class="input-group has-validation">
+                            <div class="col-sm-10">
+                                <div class="form-check-inline">
+                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="1" checked>
+                                  <label class="form-check-label" for="gridRadios1">
+                                    Nam
+                                  </label>
+                                </div>
+                                <div class="form-check-inline">
+                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="2">
+                                  <label class="form-check-label" for="gridRadios2">
+                                    Nữ
+                                  </label>
+                                </div>
+                              </div>
+                        </div>
+                        <div style='color:red;' id="msgDienThoai"></div>
+                    </div>
+                    <div class="col-6">
+                      <label for="txtDiaChi" class="form-label">Địa chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend"><i class='ri-user-location-line'></i></span>
+                        <input type="text" name="address" class="form-control" id="txtDiaChi">
+                      </div>
+                      <div style='color:red;' id="msgDiaChi"></div>
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-primary w-100" type="submit" >Cập nhật</button>
+                  </div>
+                </form>
+
+              </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<div class="card">
+    <div class="card-body">
+      <!-- Table with stripped rows -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Mã số</th>
+            <th scope="col">Họ tên</th>
+            <th scope="col">Email</th>
+            <th scope="col">Điện thoại</th>
+            <th scope="col">Lớp</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for item in list_sinhvien  %}
+            <tr>
+                <th scope="row">
+                    <img style="width:36px;height:36px;" src="{{ url_for('static', filename='assets/img/profile-img.jpg') }}" class="rounded-circle"/>
+                </th>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[4] }}</td>
+                <td>{{ item[5] }}</td>
+                <td>{{ item[6] }}</td>
+                <td>
+                  <button type="button" onclick='viewThongTinSV("{{ item }}")'
+                    class="btn btn-info" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien" title="Xem chi tiết"> 
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-warning" title="Nạp dữ liệu khuôn mặt" onclick="window.location.href='\du-lieu-khuon-mat?svid={{ item[9] }}'"> 
+                    <i class="ri-body-scan-fill"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" title="Xóa sinh viên ra khỏi lớp"> 
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+            </tr>
+            {% endfor %}
+
+            
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+
+    </div>
+</div>
+<script>
+
+  const fullname = document.getElementById("txtTenDayDu");
+  const maso = document.getElementById("txtMaSo");
+  const email = document.getElementById("txtEmail");
+  const phonenumber = document.getElementById("txtSoDienThoai");
+  const birthdate = document.getElementById("birthdate");
+  const address = document.getElementById("txtDiaChi");
+
+  const msgHoVaTen = document.getElementById("msgHoVaTen");
+  const msgMaSo = document.getElementById("msgMaSo");
+  const msgEmail = document.getElementById("msgEmail");
+  const msgDienThoai = document.getElementById("msgDienThoai");
+  const msgNgaySinh = document.getElementById("msgNgaySinh");
+  const msgDiaChi = document.getElementById("msgDiaChi");
+
+  const lop = document.getElementById("txtLop");
+  const gioitinhnam = document.getElementById("gridRadios1");
+  const gioitinhnu = document.getElementById("gridRadios2");
+
+  function viewThongTinSV(item){
+    console.log(item);
+    let data = item.replaceAll("'", "").replaceAll("(", "").replaceAll(")", "").split(",");
+    fullname.value = data[1];
+    maso.value = data[0];
+    email.value = data[4];
+    phonenumber.value = data[5];
+    birthdate.value = data[2];
+    address.value = data[3]
+    lop.value = data[6];
+    if(data[8] == 1){
+      gioitinhnam.checked = true;
+    } else {
+      gioitinhnu.checked = true;
+    }
+  }
+
+  function validForm(e) {
+    let isValid = true;
+    if(fullname.value === ''){
+      isValid = false;
+      msgHoVaTen.textContent = 'Vui lòng điền họ và tên!';
+    } else {
+      msgHoVaTen.textContent = '';
+    }
+
+    if(maso.value === ''){
+      isValid = false;
+      msgMaSo.textContent = 'Vui lòng mã số sinh viên!';
+    } else {
+      msgMaSo.textContent = '';
+    }
+
+    if(email.value === ''){
+      isValid = false;
+      msgEmail.textContent = 'Vui lòng điền thư điện tử!';
+    } else if(!validateEmail(email.value)){
+      isValid = false;
+      msgEmail.textContent = 'Địa chỉ thư điện tử không hợp lệ!';
+    }else {
+      msgEmail.textContent = '';
+    }
+
+    if(phonenumber.value === ''){
+      isValid = false;
+      msgDienThoai.textContent = 'Vui lòng điền số điện thoại!';
+    } else if(!isVietnamesePhoneNumber(phonenumber.value)){
+      console.log(phonenumber.value + ' - ' + isVietnamesePhoneNumber(phonenumber.value));
+      isValid = false;
+      msgDienThoai.textContent = 'Số điện thoại không hợp lệ!';
+    } else {
+      msgDienThoai.textContent = '';
+    }
+
+    if(birthdate.value === ''){
+      isValid = false;
+      msgNgaySinh.textContent = 'Vui lòng chọn ngày sinh!';
+    } else {
+      msgNgaySinh.textContent = '';
+    }
+
+    if(address.value === ''){
+        isValid = false;
+        msgDiaChi.textContent = 'Vui lòng điền địa chỉ!';
+    } else {
+      msgDiaChi.textContent = '';
+    }
+    console.log(isValid); 
+    if(!isValid){
+      e.preventDefault(); 
+    }
+    return isValid;
+  } 
+
+    function isVietnamesePhoneNumber(number) {
+      return /((03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b)/g.test(number);
+    }
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+    
+  </script>
+  <style>
+    .form-control.is-valid, .was-validated .form-control:valid {
+      border-color: red;
+      padding-right: calc(1.5em + 0.75rem);
+      background-image: unset;
+      background-repeat: no-repeat;
+      background-position: right calc(0.375em + 0.1875rem) center;
+      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+  </style>

@@ -16,7 +16,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <!-- Vendor CSS Files -->
   <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
@@ -51,11 +51,17 @@
       {% if name_page == "canbo" %}
         {% include  'canbo.html' %}
       {% endif %}
-      {% if name_page == "monhoc" %}
-        {% include  'monhoc.html' %}
-    {% endif %}
+      {% if name_page == "sinhvien" %}
+        {% include  'sinhvien.html' %}
+      {% endif %}
       {% if name_page == "diemdanhkhuonmat" %}
-      {% include  'diemdanh.html' %}
+        {% include  'diemdanh.html' %}
+      {% endif %}
+      {% if name_page == "dulieukhuonmat" %}
+        {% include  'facedata.html' %}
+      {% endif %}
+      {% if name_page == "profile" %}
+        {% include  'profile.html' %}
       {% endif %}
     </section>  
   </main>
