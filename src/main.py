@@ -1,27 +1,28 @@
 
-from flask import Flask, render_template, request, redirect, session, Response, url_for, flash
+from flask import Flask, render_template, request, redirect, session, Response
 import cv2
 from datetime import timedelta, datetime
 import dataprovider as dp
-from model import CanBo as cb
-from model import MonHoc as mh
+from model import CanBo, SinhVien, LopHoc
 
 app = Flask(__name__)
 app.secret_key = 'ntnguyen'
-camera = cv2.VideoCapture(0)  # use 0 for web camera
+
+
 #  for cctv camera use rtsp://username:password@ip_address:554/user=username_password='password'_channel=channel_number_stream=0.sdp' instead of camera
 # for local webcam use cv2.VideoCapture(0)
 # user = {"cb_maso": "10067", "cb_matkhau": "nguyen@cusc"}
 
-canbo = cb.CanBo()
-monhoc = mh.MonHoc()
+objCanBo = CanBo.CanBo()
+objSinhVien = SinhVien.SinhVien()
+objLopHoc = LopHoc.LopHoc()
 
 @app.route('/')
 @app.route('/home')
 def index():
     if('user' in session and 'type-account' in session):
         cbmaso = session['user']
-        return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), name_page="index", tieude="Bảng điều khiển")
+        return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), name_page="index", tieude="Bảng điều khiển")
     return render_template('login.html')
 
 @app.route('/dang-ky')
@@ -39,28 +40,92 @@ def actiondangky():
     cbNgaySinh = request.form.get('birthdate')
     cbDiaChi = request.form.get('address')
     
-    canBo = cb.CanBo(cbUsername, cbMatKhau, cbHoTen, cbNgaySinh, cbDiaChi, cbEmail, cbDienThoai, -1, datetime.now(), 0, False)
+    canBo = CanBo.CanBo(cbUsername, cbMatKhau, cbHoTen, cbNgaySinh, cbDiaChi, cbEmail, cbDienThoai, -1, datetime.now(), 0, False)
     if(canBo.create()):
         return render_template('login.html')
     else:
         return render_template('register.html')
 
 @app.route('/can-bo')
-def list_canbo():
+def get_canbo():
     if('user' in session and 'type-account' in session and session['type-account'] == 2):
         cbmaso = session['user']
-        return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), list_canbo=canbo.get_canbo_list(100,0), name_page="canbo", tieude="Quản lý cán bộ")
+        return render_template('index.html', 
+            cb=objCanBo.get_canbo_by_maso(cbmaso), 
+            list_canbo=objCanBo.get_canbo_list(100,0), 
+            name_page="canbo", tieude="Quản lý cán bộ")
+    return render_template('login.html')
+ 
+@app.route('/du-lieu-khuon-mat')
+def get_Dulieu_Khuonmat():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        _listlop = objLopHoc.get_lophoc_list(cbmaso)
+        if(request.args.get("svid") != None):
+            return render_template('index.html', 
+                cb=objCanBo.get_canbo_by_maso(cbmaso), 
+                sinhvien=objSinhVien.get_sinhvien_by_id(request.args.get("svid")), 
+                list_lophoc=_listlop,
+                name_page="dulieukhuonmat", tieude="Nạp dữ liệu khuôn mặt")
+        else:
+            return render_template('index.html', 
+                cb=objCanBo.get_canbo_by_maso(cbmaso), 
+                list_sinhvien=objSinhVien.get_sinhvien_list(_listlop[0][0]), 
+                list_lophoc=_listlop,
+                name_page="sinhvien", tieude="Quản lý sinh viên")
+        
+    return render_template('login.html')
+ 
+@app.route('/sinh-vien')
+def get_sinhvien():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        _listlop = objLopHoc.get_lophoc_list(cbmaso)
+        print("First ckass: " + _listlop[0][1])
+        return render_template('index.html', 
+            cb=objCanBo.get_canbo_by_maso(cbmaso), 
+            list_sinhvien=objSinhVien.get_sinhvien_list(_listlop[0][0]), 
+            list_lophoc=_listlop,
+            name_page="sinhvien", tieude="Quản lý sinh viên")
+    return render_template('login.html')
+
+@app.route('/sinh-vien',  methods=['GET', 'POST'])
+def capnhat_sinhvien():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        _listlop = objLopHoc.get_lophoc_list(cbmaso)
+        #Lay du lieu tu form submit qua
+        hoten = request.form.get('fullname')
+        email = request.form.get('email')
+        maso = request.form.get('maso')
+        dienthoai = request.form.get('phonenumber')
+        lop = request.form.get('lop')
+        ngaysinh = request.form.get('birthdate')
+        gioitinh = request.form.get('gridRadios')
+        diachi = request.form.get('address')
+        SinhVien.SinhVien(maso, hoten, ngaysinh, diachi, email, dienthoai, lop, gioitinh).create()
+        #Luu vao CSDL
+        return render_template('index.html', 
+            cb=objCanBo.get_canbo_by_maso(cbmaso), 
+            list_sinhvien=objSinhVien.get_sinhvien_list(_listlop[0][0]), 
+            list_lophoc=_listlop,
+            name_page="sinhvien", tieude="Quản lý sinh viên")
     return render_template('login.html')
 
 @app.route('/diem-danh')
 def diemdanhkhuonmat():
     if('user' in session and 'type-account' in session and session['type-account'] == 2):
         cbmaso = session['user']
-        return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), name_page="diemdanhkhuonmat", tieude="Điểm danh sinh viên bằng nhận diện khuôn mặt")
+        _listlop = objLopHoc.get_lophoc_list(cbmaso)
+        return render_template('index.html', 
+            cb=objCanBo.get_canbo_by_maso(cbmaso), 
+            list_sinhvien=objSinhVien.get_sinhvien_list(_listlop[0][0]), 
+            list_lophoc=_listlop, 
+            name_page="diemdanhkhuonmat", tieude="Điểm danh sinh viên bằng nhận diện khuôn mặt")
     return render_template('login.html')
 
 @app.route('/dang-nhap', methods=['GET', 'POST'])
-def dangnhap(): 
+def dangnhap():     
     if(request.method == 'POST'): 
         username = request.form.get('cb_maso')   
         password = request.form.get('cb_matkhau') 
@@ -79,21 +144,81 @@ def dangnhap():
     return render_template("login.html")
 
 @app.route('/logout')
-def dangxuat():
+def dangxuat(): 
     session.clear()
     return render_template("login.html")
 
-def gen_frames():
-    while True:
-        success, frame = camera.read()
-        if not success:
+@app.route('/profile')
+def view_profile():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        return render_template('index.html', 
+            cb=objCanBo.get_canbo_by_maso(cbmaso), 
+            list_canbo=objCanBo.get_canbo_list(100,0), 
+            name_page="profile", tieude="Thông tin cá nhân")
+    return render_template('login.html')
+
+def nap_data():
+    camera = cv2.VideoCapture(0)  # use 0 for web camera
+    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    recognizer.read('../recognizer/trainingdata.yml')
+    while True: 
+        success, frame = camera.read() 
+        if not success: 
             break
         else:
+            face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
             
+            faces = face_cascade.detectMultiScale(frame, 1.3, 5)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            for(x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 224, 19), 2)
+                roi_gray = gray[y:y+h, x:x+w]
+                roi_color = frame[y:y+h, x:x+w]
+                faces = face_cascade.detectMultiScale(roi_gray, 1.1, 3)
+                id, confidence = recognizer.predict(roi_gray)
+                if confidence < 40:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 224, 19), 2)
+                    cv2.putText(frame, "Tao biet thang nay", (x+10, y+h+30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 224, 19), 2)
+                else:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0,0,255), 2)
+                    cv2.putText(frame, "Unknown", (x+10, y+h+30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
             ret, buffer = cv2.imencode('.png', frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+def gen_frames():
+    camera = cv2.VideoCapture(0)  # use 0 for web camera
+    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    recognizer.read('../recognizer/trainingdata.yml')
+    while True: 
+        success, frame = camera.read() 
+        if not success: 
+            break
+        else:
+            face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+            
+            faces = face_cascade.detectMultiScale(frame, 1.3, 5)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            for(x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 224, 19), 2)
+                roi_gray = gray[y:y+h, x:x+w]
+                roi_color = frame[y:y+h, x:x+w]
+                faces = face_cascade.detectMultiScale(roi_gray, 1.1, 3)
+                id, confidence = recognizer.predict(roi_gray)
+                if confidence < 40:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 224, 19), 2)
+                    cv2.putText(frame, "Tao biet thang nay", (x+10, y+h+30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 224, 19), 2)
+                else:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0,0,255), 2)
+                    cv2.putText(frame, "Unknown", (x+10, y+h+30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            ret, buffer = cv2.imencode('.png', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        if(cv2.waitKey(1) & 0xFF == ord('q')):
+                break
 
 
 @app.route('/video_feed')
@@ -101,34 +226,6 @@ def video_feed():
     if('user' in session):
         return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
     return render_template('login.html')
-
-#*********************************************** Môn Học**************************************************
-
-@app.route('/mon-hoc') 
-def list_monhoc():
-    if('user' in session and 'type-account' in session and session['type-account'] == 2):
-        cbmaso = session['user']
-        return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học")
-    return render_template('login.html')
-
-@app.route('/create-mon-hoc', methods=['GET','POST'])
-def actionCreateMonHoc():
-    message = ""
-    mhMa = request.form.get('maMon')
-    mhTen = request.form.get('tenMon')
-    mhTinChi = request.form.get('soTinChi')
-    mhLyThuyet = request.form.get('lyThuyet')
-    mhThucHanh = request.form.get('thucHanh')    
-    monhoc = mh.MonHoc(mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
-    
-    if(monhoc.checkExitByMaMon()):
-       message = "Mã môn đã tồn tại"
-    else:
-        print("mã số không trùng")
-        monhoc.create()
-    
-    cbmaso = session['user']
-    return render_template('index.html', cb=canbo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học",mes =message)
 
 
 if __name__ == '__main__':
