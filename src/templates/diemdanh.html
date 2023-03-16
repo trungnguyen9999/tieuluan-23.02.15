@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <h4>Danh sách lớp học</h4>
             <select class="form-control">
                 {% for item in list_lophoc %}
@@ -33,18 +33,38 @@
                 </tbody>
                 </table>
             </div>
-            <br>
-            
-        </div>
-        <div class="col-md-4">
-            <h4>Hình ảnh trực tiếp</h4>
-            <div class="embed-responsive embed-responsive-16by9" >
-                <img id="video" src="{{ url_for('static', filename='assets/img/user.png') }}" style=" width: 350px; height: 450px; object-fit: cover;">
+            <div class="row mb-3">
+                <form action="/upload-img" method="POST" class="row g-3 needs-validation" enctype = "multipart/form-data">
+                    <div class="col-sm-11">
+                    <input class="form-control" type="file" id="image" name="image" >
+                    </div>
+                    <div class="col-sm-1">
+                        <button type="button" class="btn btn-danger" title="Xóa tập tin" onclick="deleteFile()"> 
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="col-sm-0" style="display:none;">
+                        <button type="submit" class="btn btn-danger" id="submitQuet"></button>
+                    </div> 
+                </form>
             </div>
-            <div class="card">
-                <div class="card-body" style="padding: 10px;text-align:center">
+            <div class="row mb-3">
+
+            </div>
+        </div>
+        <div class="col-md-5">
+            <h4>Hình ảnh trực tiếp</h4>
+            <div class="embed-responsive embed-responsive-16by9" style="height:450px;">
+                <img id="video" src="{{ url_for('static', filename='assets/img/user.png') }}" style="display:none; width: auto; height: 450px; object-fit: cover;">
+                <img id="video2" src="{{ image_to_show }}" style=" width: auto; height: 100%; object-fit: cover;">
+            </div>
+            <div class="card" >
+                <div class="card-body" style="padding: 10px;text-align:center" id="cardBtnDiemDanh">
                     <button type="button" class="btn btn-primary" onclick="startVideo()">Bắt đầu điểm danh</button>
                     <button type="button" class="btn btn-danger" onclick="stopVideo()">Dừng</button>
+                </div>
+                <div class="card-body" style="padding: 10px;text-align:center; display:none;" id="btnQuetKhuonMat">
+                    <button type="button" class="btn btn-danger" onclick="clickQuet()">Quét khuôn mặt</button>
                 </div>
                 <script>
                     function stopVideo() {
@@ -58,4 +78,36 @@
         </div>
     </div>
   </div>
+  <script>
+
+    const fileInput = document.querySelector('input[type="file"]');
+    const form = fileInput.closest('form');
+    function deleteFile(){
+        form.reset();
+        document.getElementById('btnQuetKhuonMat').style.display = "none";
+        document.getElementById('cardBtnDiemDanh').style.display = "block";
+        $("#video").attr("src", "{{ url_for('static', filename='assets/img/user.png') }}");
+    }
+    
+    function clickQuet(){
+        $("#submitQuet").click();
+        $("#video").attr("src", "{{ image_to_show }}");
+    }
+
+    function showImage(src, target) {
+        var fr = new FileReader();
+        fr.onload = function() {
+            target.src = fr.result;
+        }
+        fr.readAsDataURL(src);
+    }
+
+    var input = document.querySelector('input[type=file]');
+    input.onchange = function() {
+        var img = document.querySelector('#video');
+        showImage(this.files[0], img);
+        document.getElementById('btnQuetKhuonMat').style.display = "block";
+        document.getElementById('cardBtnDiemDanh').style.display = "none";
+    }
+</script>
   

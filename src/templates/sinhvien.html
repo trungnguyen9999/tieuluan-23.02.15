@@ -1,17 +1,22 @@
 
 <div class="col" style="text-align: end;margin: 10px;">
     <div class="row">
-        <div class="col-10">
+        <div class="col-8">
             <select class="form-control">
               {% for item in list_lophoc %}
               <option>{{ item[1] }} - {{ item[2] }}</option>
               {% endfor%}
             </select>
         </div>
-        <div class="col-2">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien">
-                Thêm mới
+        <div class="col-4">
+            <button type="button" class="btn btn-warning" onclick="window.location.href='train-data'">
+              Train Data
             </button>
+            {% if cb[9] == 2 %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien" title="Quản trị thêm mới 1 sinh viên">
+              Thêm mới 
+            </button>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -152,9 +157,11 @@
                   <button type="button" class="btn btn-warning" title="Nạp dữ liệu khuôn mặt" onclick="window.location.href='\du-lieu-khuon-mat?svid={{ item[9] }}'"> 
                     <i class="ri-body-scan-fill"></i>
                   </button>
+                  {% if cb[9] == 2 %}
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" title="Xóa sinh viên ra khỏi lớp"> 
                     <i class="bi bi-trash"></i>
                   </button>
+                  {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -163,7 +170,7 @@
         </tbody>
       </table>
       <!-- End Table with stripped rows -->
-
+      
     </div>
 </div>
 <script>

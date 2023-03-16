@@ -17,7 +17,6 @@ class SinhVien:
         self.sv_gioitinh = sv_gioitinh
     
     def get_sinhvien_list(self,lop_id):
-    
         conn = dp.connect()
         cur = conn.cursor()
         try:

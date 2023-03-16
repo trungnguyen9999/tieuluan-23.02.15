@@ -7,6 +7,9 @@
             </div>
             <div class="card" style="float: right;">
                 <div class="card-body" style="    padding: 10px;text-align:center;">
+                    <button type="button" class="btn btn-warning" title="Trở về danh sách sinh viên" onclick="window.location.href='\sinh-vien'"> 
+                      Trở về
+                    </button>
                     <button type="button" class="btn btn-primary" onclick="startVideo()">Bắt đầu</button>
                     <button type="button" class="btn btn-danger" onclick="stopVideo()">Dừng</button>
                 </div>
@@ -15,7 +18,7 @@
                         $("#video").attr("src", "{{ url_for('static', filename='assets/img/user.png') }}");
                     }
                     function startVideo() {
-                        $("#video").attr("src", "{{ url_for('video_feed') }}");
+                      $("#video").attr("src", "{{ url_for('video_nap_data') }}");
                     }
                   </script>
             </div>
