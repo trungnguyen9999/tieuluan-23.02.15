@@ -9,9 +9,17 @@ import base64
 import dataprovider as dp
 from model import CanBo, NienKhoa, SinhVien, LopHoc, ThoiKhoaBieu, MonHoc as mh
 
+from model.MonHoc import MonHoc
+from database import db
+
 app = Flask(__name__)
 app.secret_key = 'ntnguyen'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234567@localhost/db_diemdanhsinhvien'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+    
 #  for cctv camera use rtsp://username:password@ip_address:554/user=username_password='password'_channel=channel_number_stream=0.sdp' instead of camera
 # for local webcam use cv2.VideoCapture(0)
 # user = {"cb_maso": "10067", "cb_matkhau": "nguyen@cusc"}
@@ -395,24 +403,23 @@ def events():
         return jsonify(list_thoikhoabieu)
 #*********************************************** Môn Học**************************************************
 
-
 @app.route('/mon-hoc') 
 def list_monhoc():
     if('user' in session and 'type-account' in session and session['type-account'] == 2):
         cbmaso = session['user']
-        return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học")
+        ds_monhoc = MonHoc.query.all()
+        return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), monhocs=ds_monhoc, name_page="monhoc", tieude="Quản lý môn học")
     return render_template('login.html')
 
-@app.route('/create-mon-hoc', methods=['GET','POST'])
-def actionCreateMonHoc():
+@app.route('/save-mon-hoc', methods=['GET','POST'])
+def actionSaveMonHoc():
     message = ""
     mhMa = request.form.get('maMon')
     mhTen = request.form.get('tenMon')
     mhTinChi = request.form.get('soTinChi')
     mhLyThuyet = request.form.get('lyThuyet')
     mhThucHanh = request.form.get('thucHanh')    
-    monhoc = mh.MonHoc(mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
-    
+    monhoc = MonHoc.MonHoc(mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
     if(monhoc.checkExitByMaMon()):
        message = "Mã môn đã tồn tại"
     else:
@@ -420,6 +427,7 @@ def actionCreateMonHoc():
         monhoc.create()
     
     cbmaso = session['user']
-    return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học",mes =message)
+    ds_monhoc = MonHoc.query.all()
+    return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), monhocs=ds_monhoc, name_page="monhoc", tieude="Quản lý môn học",mes =message)
 if __name__ == '__main__':
     app.run(debug=True)
