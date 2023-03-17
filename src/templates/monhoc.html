@@ -23,39 +23,39 @@
                 </div>
 
                 <form id="create-monhoc-form" class="row g-3 needs-validation"
-                 action="/create-mon-hoc" method="POST" onsubmit="return validForm(event)">
+                 action="/save-mon-hoc" method="POST" onsubmit="return validForm(event)">
                  
                   <div class="col-6">
                     <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
-                    <input type="text" name="maMon" class="form-control" id="txtmaMon"> 
+                    <input type="text" name="maMon" class="form-control" id="txtmaMon" required="1"> 
                     <div style='color:red;' id="msgMaMon"></div>
                   </div>
 
                   <div class="col-6">
                     <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
                     <div class="input-group has-validation">
-                      <input type="text" name="tenMon" class="form-control" id="txtTenMon">
+                      <input type="text" name="tenMon" class="form-control" id="txtTenMon" required="1">
                     </div>
                     <div style='color:red;' id="msgTenMon"></div>
                   </div>
                   <div class="col-6">
                     <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
                     <div class="input-group has-validation">
-                      <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi">
+                      <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" required>
                     </div>
                     <div style='color:red;' id="msgSoTinChi"></div>
                   </div>
                   <div class="col-6">
                       <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
                       <div class="input-group has-validation">
-                        <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet">
+                        <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" required>
                       </div>
                       <div style='color:red;' id="msgLytThuyet"></div>
                   </div>
                   <div class="col-6">
                     <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
                     <div class="input-group has-validation">
-                      <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh">
+                      <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" readonly>
                     </div>
                     <div style='color:red;' id="msgThucHanh"></div>
                   </div>
@@ -88,21 +88,21 @@
           </tr>
         </thead>
         <tbody>
-            {% for item in list_monhoc  %}
+            {% for monhoc in monhocs  %}
             <tr>
-                <th scope="row">{{ item[0] }}</th>
-                <td>{{ item[1] }}</td>
-                <td>{{ item[2] }}</td>
-                <td>{{ item[3] }}</td>
-                <td>{{ item[4] }}</td>
-                <td>{{ item[5] }}</td>
+                <td>{{ loop.index}}</th>
+                <td>{{ monhoc.mh_maso }}</td>
+                <td>{{ monhoc.mh_ten }}</td>
+                <td>{{ monhoc.mh_sotinchi }}</td>
+                <td>{{ monhoc.mh_lythuyet }}</td>
+                <td>{{ monhoc.mh_thuchanh }}</td>
                 <td>
-                  <button class="btn btn-success w-40" type="button" data-bs-toggle="modal" data-bs-target="#updateModal{{item[0]}}" >Cập nhật</button>
+                  <button class="btn btn-success w-40" type="button" data-bs-toggle="modal" data-bs-target="#updateModal{{monhoc.mh_id}}" >Cập nhật</button>
                   <button class="btn btn-danger w-25" >Xóa</button>
                   
                 </td>
             </tr>
-            <div class="modal fade" id="updateModal{{item[0]}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal fade" id="updateModal{{monhoc.mh_id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
               <div class="modal-dialog" style="max-width: 800px;">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -123,35 +123,35 @@
                            
                             <div class="col-6">
                               <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
-                              <input type="text" name="maMon" class="form-control" id="txtmaMon" value="{{item[1]}}"> 
+                              <input type="text" name="maMon" class="form-control" id="txtmaMon" value="{{monhoc.mh_id}}"> 
                               <div style='color:red;' id="msgMaMon"></div>
                             </div>
           
                             <div class="col-6">
                               <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
                               <div class="input-group has-validation">
-                                <input type="text" name="tenMon" class="form-control" id="txtTenMon" value="{{item[2]}}">
+                                <input type="text" name="tenMon" class="form-control" id="txtTenMon" value="{{monhoc.mh_id}}">
                               </div>
                               <div style='color:red;' id="msgTenMon"></div>
                             </div>
                             <div class="col-6">
                               <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
                               <div class="input-group has-validation">
-                                <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" value="{{item[3]}}">
+                                <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" value="{{monhoc.mh_id}}">
                               </div>
                               <div style='color:red;' id="msgSoTinChi"></div>
                             </div>
                             <div class="col-6">
                                 <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
                                 <div class="input-group has-validation">
-                                  <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" value="{{item[4]}}">
+                                  <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" value="{{monhoc.mh_id}}">
                                 </div>
                                 <div style='color:red;' id="msgLytThuyet"></div>
                             </div>
                             <div class="col-6">
                               <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
                               <div class="input-group has-validation">
-                                <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" value="{{item[5]}}">
+                                <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" value="{{monhoc.mh_id}}">
                               </div>
                               <div style='color:red;' id="msgThucHanh"></div>
                             </div>
