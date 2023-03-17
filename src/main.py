@@ -1,13 +1,13 @@
 
 from flask import Flask, render_template, request, redirect, session, Response, jsonify
-import cv2
+import cv2, json
 from datetime import timedelta, datetime
 import os, time
 import numpy as np
 from PIL import Image
 import base64
 import dataprovider as dp
-from model import CanBo, SinhVien, LopHoc
+from model import CanBo, NienKhoa, SinhVien, LopHoc, ThoiKhoaBieu, MonHoc as mh
 
 app = Flask(__name__)
 app.secret_key = 'ntnguyen'
@@ -20,9 +20,11 @@ objCanBo = CanBo.CanBo()
 objSinhVien = SinhVien.SinhVien()
 sinhVien=None
 objLopHoc = LopHoc.LopHoc()
+objThoiKhoaBieu = ThoiKhoaBieu.ThoiKhoaBieu()
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 pathData = "../src/dataset/"
 cam = 0
+monhoc = mh.MonHoc()
 
 def setObjSinhVien(sv):
     global sinhVien   
@@ -63,7 +65,7 @@ def get_canbo():
         cbmaso = session['user']
         return render_template('index.html', 
             cb=objCanBo.get_canbo_by_maso(cbmaso), 
-            list_canbo=objCanBo.get_canbo_list(100,0), 
+            list_canbo=objCanBo.get_canbo_list(), 
             name_page="canbo", tieude="Quản lý cán bộ")
     return render_template('login.html')
  
@@ -134,6 +136,7 @@ def diemdanhkhuonmat():
             cb=objCanBo.get_canbo_by_maso(cbmaso), 
             list_sinhvien=objSinhVien.get_sinhvien_list(_listlop[0][0]), 
             list_lophoc=_listlop, 
+            url="static/assets/img/user.png",
             name_page="diemdanhkhuonmat", tieude="Điểm danh sinh viên bằng nhận diện khuôn mặt")
     return render_template('login.html')
 
@@ -166,8 +169,7 @@ def view_profile():
     if('user' in session and 'type-account' in session and session['type-account'] == 2):
         cbmaso = session['user']
         return render_template('index.html', 
-            cb=objCanBo.get_canbo_by_maso(cbmaso), 
-            list_canbo=objCanBo.get_canbo_list(100,0), 
+            cb=objCanBo.get_canbo_by_maso(cbmaso),
             name_page="profile", tieude="Thông tin cá nhân")
     return render_template('login.html')
 
@@ -356,8 +358,68 @@ def video_nap_data():
         return Response(nap_data(), mimetype='multipart/x-mixed-replace; boundary=frame')
     return render_template('login.html')
 
-# @app.route('/thoi-khoa-bieu')
-# def thoi_khoa_bieu():
+@app.route('/thoi-khoa-bieu')
+def thoi_khoa_bieu():
+    if('user' in session and 'type-account' in session):
+        cbmaso = session['user']
+        typeaccount = session['type-account']
+        _listlop = objLopHoc.get_lophoc_list(cbmaso)
+        _listcanbo = objCanBo.get_canbo_list()
+        if(typeaccount == 2):
+            return render_template('index.html',
+                cb=objCanBo.get_canbo_by_maso(cbmaso), 
+                list_canbo=_listcanbo, 
+                list_lophoc=_listlop,
+                list_hocphan="",
+                list_thoikhoabieu=objThoiKhoaBieu.get_tkb_list(_listcanbo[0][0]),
+                name_page="thoikhoabieu", tieude="Thời khóa biểu")
+        return render_template('index.html',
+            cb=objCanBo.get_canbo_by_maso(cbmaso), 
+            list_lophoc=_listlop,
+            list_thoikhoabieu=objThoiKhoaBieu.get_tkb_list(objCanBo.get_canbo_id_by_maso(cbmaso)),
+            name_page="thoikhoabieu", tieude="Thời khóa biểu")
+    return render_template('login.html')
+
+@app.route('/events')
+def events():
+    if('user' in session and 'type-account' in session):
+        cbmaso = session['user']
+        _listcanbo = objCanBo.get_canbo_list()
+        typeaccount = session['type-account']
+        if(typeaccount == 2):
+            list_thoikhoabieu=objThoiKhoaBieu.get_tkb_list("2")
+            print(list_thoikhoabieu)
+            return jsonify(list_thoikhoabieu)
+        list_thoikhoabieu=objThoiKhoaBieu.get_tkb_list(objCanBo.get_canbo_id_by_maso(cbmaso))
+        print(list_thoikhoabieu)
+        return jsonify(list_thoikhoabieu)
+#*********************************************** Môn Học**************************************************
+
+
+@app.route('/mon-hoc') 
+def list_monhoc():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học")
+    return render_template('login.html')
+
+@app.route('/create-mon-hoc', methods=['GET','POST'])
+def actionCreateMonHoc():
+    message = ""
+    mhMa = request.form.get('maMon')
+    mhTen = request.form.get('tenMon')
+    mhTinChi = request.form.get('soTinChi')
+    mhLyThuyet = request.form.get('lyThuyet')
+    mhThucHanh = request.form.get('thucHanh')    
+    monhoc = mh.MonHoc(mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
     
+    if(monhoc.checkExitByMaMon()):
+       message = "Mã môn đã tồn tại"
+    else:
+        print("mã số không trùng")
+        monhoc.create()
+    
+    cbmaso = session['user']
+    return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), list_monhoc=monhoc.get_monhoc_list(100,0), name_page="monhoc", tieude="Quản lý môn học",mes =message)
 if __name__ == '__main__':
     app.run(debug=True)

@@ -56,7 +56,7 @@
             <h4>Hình ảnh trực tiếp</h4>
             <div class="embed-responsive embed-responsive-16by9" style="height:450px;">
                 <img id="video" src="{{ url_for('static', filename='assets/img/user.png') }}" style="display:none; width: auto; height: 450px; object-fit: cover;">
-                <img id="video2" src="{{ image_to_show }}" style=" width: auto; height: 100%; object-fit: cover;">
+                <img id="video2" src="{{ url }}" style=" width: auto; height: 100%; object-fit: cover;">
             </div>
             <div class="card" >
                 <div class="card-body" style="padding: 10px;text-align:center" id="cardBtnDiemDanh">
@@ -72,6 +72,8 @@
                     }
                     function startVideo() {
                         $("#video").attr("src", "{{ url_for('video_feed') }}");
+                        document.getElementById('video').style.display = "block";
+                        document.getElementById('video2').style.display = "none";
                     }
                   </script>
             </div>
@@ -104,7 +106,7 @@
 
     var input = document.querySelector('input[type=file]');
     input.onchange = function() {
-        var img = document.querySelector('#video');
+        var img = document.querySelector('#video2');
         showImage(this.files[0], img);
         document.getElementById('btnQuetKhuonMat').style.display = "block";
         document.getElementById('cardBtnDiemDanh').style.display = "none";

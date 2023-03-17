@@ -17,12 +17,12 @@ class CanBo:
         self.cb_trangthai = cb_trangthai
     
     
-    def get_canbo_list(self, limit, offset):
+    def get_canbo_list(self):
         conn = dp.connect()
         cur = conn.cursor()
         try:
             cur.execute("SELECT cb_id, cb_maso, cb_hoten, cb_ngaysinh, cb_email, cb_dienthoai, cb_diachi, cb_ngaytao, cb_quyentruycap, cb_trangthai, cb_hinh \
-                FROM public.canbo LIMIT %s OFFSET %s", (limit, offset))
+                FROM public.canbo")
             rows = cur.fetchall()
         except psycopg2.Error as e:
             print("Error selecting rows: ", e)
@@ -37,6 +37,20 @@ class CanBo:
         try:
             query = "Select cb_id, cb_maso, cb_hoten, cb_ngaysinh, cb_diachi, cb_email, cb_dienthoai, cb_ngaytao, cb_hinh, cb_quyentruycap \
                 from canbo where cb_maso = %s"
+            cur.execute(query, (cb_maso, ))
+            canbo = cur.fetchone()
+        except psycopg2.Error as e:
+            print("Error selecting rows: ", e)
+        finally:
+            cur.close()
+            conn.close()
+        return canbo
+    
+    def get_canbo_id_by_maso(self, cb_maso):
+        conn = dp.connect()
+        cur = conn.cursor()
+        try:
+            query = "Select cb_id from canbo where cb_maso = %s"
             cur.execute(query, (cb_maso, ))
             canbo = cur.fetchone()
         except psycopg2.Error as e:

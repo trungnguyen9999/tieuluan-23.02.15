@@ -10,11 +10,11 @@
         </div>
         <div class="col-4">
             <button type="button" class="btn btn-warning" onclick="window.location.href='train-data'">
-              Train Data
+              <i class="bi bi-shuffle"></i>Train Data
             </button>
             {% if cb[9] == 2 %}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien" title="Quản trị thêm mới 1 sinh viên">
-              Thêm mới 
+              <i class="bi bi-plus me-1"></i>Thêm mới 
             </button>
             {% endif %}
         </div>
@@ -134,7 +134,6 @@
             <th scope="col">Họ tên</th>
             <th scope="col">Email</th>
             <th scope="col">Điện thoại</th>
-            <th scope="col">Lớp</th>
             <th></th>
           </tr>
         </thead>
@@ -148,7 +147,6 @@
                 <td>{{ item[1] }}</td>
                 <td>{{ item[4] }}</td>
                 <td>{{ item[5] }}</td>
-                <td>{{ item[6] }}</td>
                 <td>
                   <button type="button" onclick='viewThongTinSV("{{ item }}")'
                     class="btn btn-info" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien" title="Xem chi tiết"> 

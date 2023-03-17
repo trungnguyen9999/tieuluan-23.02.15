@@ -11,6 +11,7 @@ class LopHoc:
         self.nh_id = nh_id
         self.nienkhoa = nienkhoa
         
+        
     def get_lophoc_list(self, cbmaso):
         conn = dp.connect()
         cur = conn.cursor()
