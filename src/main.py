@@ -239,27 +239,42 @@ def video_feed():
 def list_monhoc():
     if('user' in session and 'type-account' in session and session['type-account'] == 2):
         cbmaso = session['user']
-        ds_monhoc = MonHoc.query.all()
+        ds_monhoc = MonHoc.get_monhoc()
         return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), monhocs=ds_monhoc, name_page="monhoc", tieude="Quản lý môn học")
     return render_template('login.html')
 
 @app.route('/save-mon-hoc', methods=['GET','POST'])
 def actionSaveMonHoc():
     message = ""
+    mhId = request.form.get('idMon')
     mhMa = request.form.get('maMon')
     mhTen = request.form.get('tenMon')
     mhTinChi = request.form.get('soTinChi')
     mhLyThuyet = request.form.get('lyThuyet')
-    mhThucHanh = request.form.get('thucHanh')    
-    monhoc = MonHoc.MonHoc(mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
-    if(monhoc.checkExitByMaMon()):
-       message = "Mã môn đã tồn tại"
-    else:
-        print("mã số không trùng")
-        monhoc.create()
+    mhThucHanh = request.form.get('thucHanh')
+    result = MonHoc.save_monhoc(mhId, mhMa, mhTen, mhTinChi, mhLyThuyet, mhThucHanh)
     
+    if result == None:
+       message = "Mã môn đã tồn tại"
+    #    print("-------> " + message)   
+       
     cbmaso = session['user']
-    ds_monhoc = MonHoc.query.all()
+    ds_monhoc = MonHoc.get_monhoc()
+    return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), monhocs=ds_monhoc, name_page="monhoc", tieude="Quản lý môn học",mes =message)
+
+@app.route('/delete-mon-hoc', methods=['POST'])
+def actionDeletedMonHoc():
+    
+    mhId = request.form.get('monhoc_id')
+    print("---------Xóa môn học" + str(mhId))
+    rs = MonHoc.delete_monhoc_by_id(mhId)
+    if rs:
+        message = "Xóa thành công"
+    else:
+        message = "Không thể xóa môn học"
+        
+    cbmaso = session['user']
+    ds_monhoc = MonHoc.get_monhoc()
     return render_template('index.html', cb=objCanBo.get_canbo_by_maso(cbmaso), monhocs=ds_monhoc, name_page="monhoc", tieude="Quản lý môn học",mes =message)
 if __name__ == '__main__':
     app.run(debug=True)
