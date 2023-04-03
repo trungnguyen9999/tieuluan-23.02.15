@@ -9,14 +9,6 @@ class MonHoc(db.Model):
     mh_sotinchi = db.Column(db.Integer, nullable=False)
     mh_lythuyet = db.Column(db.Integer, nullable=False)
     mh_thuchanh = db.Column(db.Integer, nullable=False)
-    
-    # def __init__(self, mh_id, mh_maso, mh_ten, mh_sotinchi, mh_lythuyet=None, mh_thuchanh=None):
-    #     self.mh_id = mh_id
-    #     self.mh_maso = mh_maso
-    #     self.mh_ten = mh_ten
-    #     self.mh_sotinchi = mh_sotinchi
-    #     self.mh_lythuyet = mh_lythuyet
-    #     self.mh_thuchanh = mh_thuchanh
         
     @staticmethod
     def get_monhoc():

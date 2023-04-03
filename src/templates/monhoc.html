@@ -97,17 +97,11 @@
                 <td>{{ monhoc.mh_lythuyet }}</td>
                 <td>{{ monhoc.mh_thuchanh }}</td>
                 <td>
-                  <div class="row">
-                    
                     <form id="delete-monhoc-form" method="POST" action="/delete-mon-hoc">
                     <input type="hidden" name="monhoc_id" value="{{ monhoc.mh_id }}">
                     <button class="btn btn-success w-40" type="button" data-bs-toggle="modal" data-bs-target="#updateModal{{monhoc.mh_id}}" >Cập nhật</button>
-                    <button class="btn btn-danger w-25" type="submit">Xóa</button>
+                    <button class="btn btn-danger w-25" type="submit" onclick="return confirmDelete()"  >Xóa</button>
                     </form>
-                  </div>
-                  
-                  
-                  
                 </td>
             </tr>
             <div class="modal fade" id="updateModal{{monhoc.mh_id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
@@ -131,7 +125,7 @@
                            
                             <div class="col-6">
                               <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
-                              <input type="text" name="idMon" class="form-control" id="txtmaMon" value="{{monhoc.mh_id}}"> 
+                              <input type="hidden" name="idMon" class="form-control" id="txtmaMon" value="{{monhoc.mh_id}}"> 
                               <input type="text" name="maMon" class="form-control" id="txtmaMon" value="{{monhoc.mh_maso}}"> 
                               <div style='color:red;' id="msgMaMon"></div>
                             </div>
@@ -216,7 +210,15 @@
       e.preventDefault(); 
     }
     return isValid;
-  } 
+  }
+  
+  function confirmDelete() {
+        if (confirm("Bạn có chắc chắn muốn xóa?")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     
   </script>

@@ -22,6 +22,7 @@ class LopHoc(db.Model):
         
         # Nếu tồn tại lophoc khác có cùng maso, trả về thông báo lỗi
         if existing_lophoc and (str(existing_lophoc.lop_id) != str(lop_id)):
+            print("không thể saved")
             return None
         else:
             print("có thể saved")
@@ -35,6 +36,16 @@ class LopHoc(db.Model):
             lophoc.nienkhoa = nienkhoa
             db.session.add(lophoc)  
             db.session.commit()
+            
+    @staticmethod
+    def delete_lophoc_by_id(lop_id):
+        lophoc = LopHoc.query.filter_by(lop_id=lop_id).first()
+        if lophoc:
+            db.session.delete(lophoc)
+            db.session.commit()
+            return True
+        else:
+            return False
 
 
     def get_lophoc_list(cbmaso):
