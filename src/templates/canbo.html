@@ -1,10 +1,10 @@
 
 <div class="col" style="text-align: end;margin: 10px;">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#themCanBo">
         Thêm mới
       </button>
 </div>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="themCanBo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="max-width: 800px;">
       <div class="modal-content">
         <div class="modal-header">
@@ -20,7 +20,7 @@
                       <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
                 </div>
 
-                <form id="register-form" class="row g-3 needs-validation" action="/dang-ky" method="POST" onsubmit="return validForm(event)">
+                <form id="register-form" class="row g-3 needs-validation" action="/dang-ky?dangky=false" method="POST" onsubmit="return validForm(event)">
                   <div class="col-6">
                     <label for="txtTenDayDu" class="form-label">Họ và tên <span style='color:red;font-weight:700;'>(*)</span></label>
                     <input type="text" name="fullname" class="form-control" id="txtTenDayDu"> 
@@ -94,18 +94,19 @@
     </div>
   </div>
 <div class="card">
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <!-- Table with stripped rows -->
-      <table class="table table-striped">
+      <table class="table table-striped ">
         <thead>
           <tr>
             <th scope="col"></th>
             <th scope="col">Mã số</th>
-            <th scope="col">Hộ tên</th>
+            <th scope="col">Họ tên</th>
             <th scope="col">Email</th>
             <th scope="col">Điện thoại</th>
             <th scope="col">Quyền</th>
             <th scope="col">Trạng thái</th>
+            <th></th>
             <th></th>
           </tr>
         </thead>
@@ -115,22 +116,101 @@
                 <th scope="row">
                   <img style="width:36px;height:36px;" src="{{ url_for('static', filename='assets/img/profile-img.jpg') }}" class="rounded-circle"/>
                 </th>
-                <td>{{ item[1] }}</td>
-                <td>{{ item[2] }}</td>
-                <td>{{ item[4] }}</td>
-                <td>{{ item[5] }}</td>
-                {% if item[8] == 1 %}
-                    <td>Giảng viên</td>
+                <td>{{ item.cb_maso }}</td>
+                <td>{{ item.cb_hoten }}</td>
+                <td>{{ item.cb_email }}</td>
+                <td>{{ item.cb_dienthoai }}</td>
+                {% if item.cb_quyentruycap == 1 %}
+                <td>Giảng viên</td>
+                {% elif item.cb_quyentruycap == 2 %}
+                <td>Quản trị</td>
+                {% else %}
+                <td>Không có</td>
                 {% endif %}
-                {% if item[8] == 2 %}
-                    <td>Quản trị</td>
-                {% endif %}
-                <td>{{ item[9] }}</td>
+                <td style="text-align:center;">
+                  <input name="check-out" type="checkbox" class="form-check-input" id="check-out" {{ "checked" if item.cb_trangthai == True else "" }} 
+                  disabled="disabled">
+                </td>
+                <td>
+                  <a href="#" class="visible" title="Sửa"><i class="ri-edit-2-line" data-bs-toggle="modal" data-bs-target="#capNhatCanBo{{item.cb_id}}"></i></a>
+                </td>
                 <td>
                   <a href="#" class="visible" title="Xem chi tiết"><i class="bi bi-eye"></i></a>
-                  
                 </td>
             </tr>
+            <div class="modal fade" id="capNhatCanBo{{item.cb_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" style="max-width: 800px;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cập nhật cán bộ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="card-capnhat-canbo">
+                        <div class="card-body">
+          
+                          <div class="pt-4 pb-2">
+                            <p class="text-center small">
+                                <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                          </div>
+                          <form>
+                            <div class="row g-3 needs-validation">
+                              <div class="col-6">
+                                <label for="txtTenDayDu" class="form-label">Họ và tên <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <input type="text" name="fullname" class="form-control" id="txtTenDayDu" value="{{ item.cb_hoten }}"> 
+                                <div style='color:red;' id="msgHoVaTen"></div>
+                              </div>
+                              <div class="col-6">
+                                <label for="txtEmail" class="form-label">Thư điện tử <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" ><i class='ri-mail-line'></i></span>
+                                  <input type="text" name="email" class="form-control" id="txtEmail" value="{{ item.cb_email }}">
+                                </div>
+                                <div style='color:red;' id="msgEmail"></div>
+                              </div>
+                              <div class="col-6">
+                                <label for="txtTenDangNhap" class="form-label">Tên đăng nhập <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" >@</span>
+                                  <input type="text" name="username" class="form-control" id="txtTenDangNhap" value="{{ item.cb_maso }}">
+                                </div>
+                                <div style='color:red;' id="msgTenDangNhap"></div>
+                              </div>
+                              <div class="col-6">
+                                <label for="txtSoDienThoai" class="form-label">Điện thoại <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" ><i class='bi bi-telephone'></i></span>
+                                  <input type="text" name="phonenumber" class="form-control" id="txtSoDienThoai" value="{{ item.cb_dienthoai }}">
+                                </div>
+                                <div style='color:red;' id="msgDienThoai"></div>
+                              </div>
+                              <div class="col-6">
+                                <label for="inputDate" class="form-label">Ngày sinh <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend"><i class='bi bi-calendar-date'></i></span>
+                                  <input type="date" class="form-control" name='birthdate' id='birthdate'  value="{{ item.cb_ngaysinh }}">
+                                </div>
+                                <div style='color:red;' id="msgNgaySinh"></div>
+                              </div>
+                              <div class="col-6">
+                                <label for="txtDiaChi" class="form-label">Địa chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend"><i class='ri-user-location-line'></i></span>
+                                  <input type="text" name="address" class="form-control" id="txtDiaChi" value="{{ item.cb_diachi }}">
+                                </div>
+                                <div style='color:red;' id="msgDiaChi"></div>
+                              </div>
+                              <div class="col-12">
+                                <button class="btn btn-primary w-100" type="submit" >Cập nhật</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             {% endfor %}
 
             

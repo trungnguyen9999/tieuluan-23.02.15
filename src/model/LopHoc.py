@@ -16,14 +16,41 @@ class LopHoc:
         conn = dp.connect()
         cur = conn.cursor()
         try:
-            cur.execute("SELECT distinct lh.* FROM public.lophoc lh \
-                INNER JOIN thoikhoabieu tkb USING (lop_id) \
-                INNER JOIN canbo cb ON tkb.cb_id = cb.cb_id \
-                WHERE cb_maso = %s", (cbmaso, ))
-            rows = cur.fetchall()
+            if(cbmaso != "-1"):
+                query = "SELECT distinct lh.* FROM public.lophoc lh \
+                    INNER JOIN thoikhoabieu tkb USING (lop_id) \
+                    INNER JOIN canbo cb ON tkb.cb_id = cb.cb_id \
+                    WHERE cb_maso = %s"
+                cur.execute(query, (cbmaso, ))
+                rows = cur.fetchall()
+            else:
+                query = "SELECT distinct lh.* FROM public.lophoc lh \
+                    LEFT JOIN thoikhoabieu tkb USING (lop_id) \
+                    LEFT JOIN canbo cb ON tkb.cb_id = cb.cb_id"
+                cur.execute(query)
+                rows = cur.fetchall()
+            return rows
         except psycopg2.Error as e:
             print("Error selecting rows: ", e)
         finally:
             cur.close()
             conn.close()
-        return rows
+        return None
+    
+    def get_info_diemdanh(self, cbmaso):
+        conn = dp.connect()
+        cur = conn.cursor()
+        try:
+            query = "SELECT tkb_id FROM public.lophoc lh \
+                INNER JOIN thoikhoabieu tkb USING (lop_id) \
+                INNER JOIN canbo cb ON tkb.cb_id = cb.cb_id \
+                WHERE cb_maso = %s and tkb_ngayhoc = current_date and giovao <= current_time and giora >= current_time"
+            cur.execute(query, (cbmaso, ))
+            row = cur.fetchone()
+            return row
+        except psycopg2.Error as e:
+            print("Error selecting rows: ", e)
+        finally:
+            cur.close()
+            conn.close()
+        return None

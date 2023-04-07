@@ -1,86 +1,177 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-7">
-            <h4>Danh sách lớp học</h4>
-            <select class="form-control">
-                {% for item in list_lophoc %}
-                <option>{{ item[1] }} - {{ item[2] }}</option>
-                {% endfor%}
-            </select>
+<div class="card">
+    <div class="card-body pt-3">
+      <!-- Bordered Tabs -->
+      <ul class="nav nav-tabs nav-tabs-bordered">
+
+        <li class="nav-item">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#munual">Điểm danh thủ công</button>
+        </li>
+
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#camera">Điểm danh bằng Camera</button>
+        </li>
+
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#photo">Điểm danh bằng Video/Ảnh</button>
+        </li>
+      </ul>
+      <div class="tab-content pt-2">
+        <div class="tab-pane fade show active profile-overview" id="munual"> 
             <br>
-            <h4>Danh sách sinh viên lớp ...</h4>
+            <div style="text-align: start;">
+                    <form action="/diem-danh" method="POST" class="row g-3">
+                        <div class="col-md-9">
+                            <select class="form-control" name="tkb_id" id="tkb_id">
+                                {% if list_thoikhoabieu_diemdanh != None %}
+                                    {% for item in list_thoikhoabieu_diemdanh %}
+                                    <option  value={{ item[0] }}>{{ item[3] }}; {{ item[1] }}; {{ item[2] }}</option>
+                                    {% endfor%}
+                                {% else %}
+                                <option value="-1">Không có dữ liệu</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-control" name="thoidiem_dd" id="thoidiem_dd">
+                                <option value="1">Giờ vào</option>
+                                <option value="2">Giờ ra</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-secondary form-control">
+                                Xem
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+            <br>
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                    <th style="width:25%">Mã số</th>
-                    <th style="width:55%">Họ tên</th>
-                    <th style="width:20%;text-align: center;">Trạng thái</th>
+                        <th>STT</th>
+                        <th style="width:15%">Mã số</th>
+                        <th style="width:45%">Họ tên</th>
+                        <th style="width:20%">Thời gian</th>
+                        <th style="width:20%;text-align: center;">Chọn</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in list_sinhvien  %}
+                    {% if list_sinhvien != None %}
+                        {% for num, item in list_sinhvien  %}
+                        <tr>
+                            <td style="text-align: center;">{{ num }}</td>
+                            <td>{{ item[0] }}</td>
+                            <td>{{ item[1] }}</td>
+                            <td>
+                                {% if item[2] != None %}
+                                    {{ item[2] }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="text-align: center;">
+                                    <input class="form-check-input" type="checkbox" {{ "checked" if item[3] == 1 else "" }}
+                                    value="" id="{{ item[4] }}" onclick="checkBoxChange({{ item[4] }})" >
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
                     <tr>
-                        <td>{{ item[0] }}</td>
-                        <td>{{ item[1] }}</td>
-                        <td>
-                            <div style="text-align: center;">
-                                <input class="form-check-input" type="checkbox" value="" id="{{ item[9] }}">
-                            </div>
-                        </td>
+                        <td colspan="5" style="text-align:center">Không có dữ liệu</td>
                     </tr>
-                    {% endfor %}
+                    {% endif %}
                 </tbody>
                 </table>
             </div>
-            <div class="row mb-3">
-                <form action="/upload-img" method="POST" class="row g-3 needs-validation" enctype = "multipart/form-data">
-                    <div class="col-sm-11">
-                    <input class="form-control" type="file" id="image" name="image" >
-                    </div>
-                    <div class="col-sm-1">
-                        <button type="button" class="btn btn-danger" title="Xóa tập tin" onclick="deleteFile()"> 
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                    <div class="col-sm-0" style="display:none;">
-                        <button type="submit" class="btn btn-danger" id="submitQuet"></button>
-                    </div> 
-                </form>
+            <div style="text-align:end; margin-top:10px;">
+                <button type="button" class="btn btn-danger" onclick="submitDiemDanhThuCong()">
+                    Cập nhật
+                </button>
+                <button type="button" class="btn btn-warning">
+                    Hủy bỏ
+                </button>
             </div>
-            <div class="row mb-3">
+        </div>
 
+        <div class="tab-pane fade profile-edit pt-3" id="camera">
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="row mb-12">
+                      <div>
+                          <div class="card-body" style="padding: 10px;text-align:center" id="cardBtnDiemDanh">
+                              <button type="button" class="btn btn-primary" onclick="startVideo()">Bắt đầu điểm danh</button>
+                              <button type="button" class="btn btn-danger" onclick="stopVideo()">Dừng</button>
+                          </div>
+                          
+                          <script>
+                              function stopVideo() {
+                                  $("#video").attr("src", "{{ url_for('static', filename='assets/img/user.png') }}");
+                              }
+                              function startVideo() {
+                                  $("#video").attr("src", "{{ url_for('video_feed') }}");
+                                  document.getElementById('video').style.display = "";
+                              }
+                            </script>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="embed-responsive embed-responsive-16by9" style="height:450px;text-align: center;">
+                          <img id="video" src="{{ url_for('static', filename='assets/img/user.png') }}" style="max-width: fit-content;width: 70%; height:400px; object-fit: cover;">
+                      </div>
+                      
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="tab-pane fade profile-edit pt-3" id="photo">
+            <form action="/upload-img" id="formupload" method="POST" class="row g-3 needs-validation" enctype = "multipart/form-data">
+                <div class="col-sm-9">
+                <input class="form-control" type="file" id="image" name="image" >
+                </div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-danger" title="Xóa tập tin" onclick="deleteFile()"> 
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="clickQuet()">Quét khuôn mặt</button>
+                </div>
+                <div class="col-sm-0" style="display:none;">
+                    <button type="submit" class="btn btn-danger" id="submitQuet"></button>
+                </div> 
+            </form>
+            <div style="text-align:center; margin-top:10px;">
+                <img id="video2" src="{{ image_to_show }}" style=" width: auto; height: 400px; object-fit: cover;">
             </div>
         </div>
-        <div class="col-md-5">
-            <h4>Hình ảnh trực tiếp</h4>
-            <div class="embed-responsive embed-responsive-16by9" style="height:450px;">
-                <img id="video" src="{{ url_for('static', filename='assets/img/user.png') }}" style="display:none; width: auto; height: 450px; object-fit: cover;">
-                <img id="video2" src="{{ url }}" style=" width: auto; height: 100%; object-fit: cover;">
-            </div>
-            <div class="card" >
-                <div class="card-body" style="padding: 10px;text-align:center" id="cardBtnDiemDanh">
-                    <button type="button" class="btn btn-primary" onclick="startVideo()">Bắt đầu điểm danh</button>
-                    <button type="button" class="btn btn-danger" onclick="stopVideo()">Dừng</button>
-                </div>
-                <div class="card-body" style="padding: 10px;text-align:center; display:none;" id="btnQuetKhuonMat">
-                    <button type="button" class="btn btn-danger" onclick="clickQuet()">Quét khuôn mặt</button>
-                </div>
-                <script>
-                    function stopVideo() {
-                        $("#video").attr("src", "{{ url_for('static', filename='assets/img/user.png') }}");
-                    }
-                    function startVideo() {
-                        $("#video").attr("src", "{{ url_for('video_feed') }}");
-                        document.getElementById('video').style.display = "block";
-                        document.getElementById('video2').style.display = "none";
-                    }
-                  </script>
-            </div>
-        </div>
+      </div><!-- End Bordered Tabs -->
+
     </div>
   </div>
+
+
   <script>
+
+    $(document).ready(function () {
+        // Lấy active_tab từ URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var activeTab = urlParams.get('active_tab');
+        console.log(activeTab);
+        // Set lại active tab từ active_tab
+        if (activeTab) {
+            $('#' + activeTab).tab('show');
+        }
+    });
+
+    $(document).ready(function () {
+        $('#formupload').on('submit', function () {
+            // Lấy id của tab đang được chọn
+            var activeTab = $('.tab-pane .fade .profile-edit .pt-3').attr('id');
+            // Lưu vào localStorage để giữ nguyên tab khi form được submit
+            console.log(activeTab);
+            localStorage.setItem('activeTab', activeTab);
+        });
+    });
 
     const fileInput = document.querySelector('input[type="file"]');
     const form = fileInput.closest('form');
@@ -93,7 +184,7 @@
     
     function clickQuet(){
         $("#submitQuet").click();
-        $("#video").attr("src", "{{ image_to_show }}");
+        $("#video2").attr("src", "{{ image_to_show }}");
     }
 
     function showImage(src, target) {
@@ -104,12 +195,30 @@
         fr.readAsDataURL(src);
     }
 
-    var input = document.querySelector('input[type=file]');
+    var input = document.querySelector('input[type="file"]');
     input.onchange = function() {
+        console.log('them file');
         var img = document.querySelector('#video2');
         showImage(this.files[0], img);
-        document.getElementById('btnQuetKhuonMat').style.display = "block";
         document.getElementById('cardBtnDiemDanh').style.display = "none";
+    }
+
+    let arrIdSinhVienDiemDanh = [];
+    function checkBoxChange(v){
+        var checkBox = document.getElementById(v);
+        if(checkBox.checked){
+            arrIdSinhVienDiemDanh.push(v);
+        } else {
+            arrIdSinhVienDiemDanh = arrIdSinhVienDiemDanh.filter(item => item !== v);
+        }
+        console.log(arrIdSinhVienDiemDanh);
+    }
+
+    function submitDiemDanhThuCong(){
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/diem-danh?type=1&tkbid={{tkbid}}&thoidiem_dd={{thoidiem_dd}}");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(arrIdSinhVienDiemDanh));
     }
 </script>
   

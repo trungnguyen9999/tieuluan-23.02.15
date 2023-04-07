@@ -26,17 +26,16 @@
 
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img src="{{ url_for('static', filename='assets/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle">
-          <span class="d-none d-md-block dropdown-toggle ps-2">{{ cb[1] }}</span>
+          <span class="d-none d-md-block dropdown-toggle ps-2">{{ cb.cb_maso }}</span>
         </a><!-- End Profile Iamge Icon -->
 
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
-            <h6>{{ cb[2] }}</h6>
+            <h6>{{ cb.cb_hoten }}</h6>
             <span>
-              {% if cb[9] == 1 %}
+              {% if cb.cb_quyentruycap != 2 %}
                 Giảng viên
-              {% endif %}
-              {% if cb[9] == 2 %}
+              {% else %}
                 Quản trị viên
               {% endif %}
             </span>
@@ -46,7 +45,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+            <a class="dropdown-item d-flex align-items-center" href="/profile">
               <i class="bi bi-person"></i>
               <span>Thông tin cá nhân</span>
             </a>
@@ -56,7 +55,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+            <a class="dropdown-item d-flex align-items-center" href="/profile">
               <i class="bi bi-gear"></i>
               <span>Cấu hình tài khoản</span>
             </a>

@@ -1,18 +1,27 @@
 
 <div class="col" style="text-align: end;margin: 10px;">
     <div class="row">
-        <div class="col-8">
-            <select class="form-control">
-              {% for item in list_lophoc %}
-              <option>{{ item[1] }} - {{ item[2] }}</option>
-              {% endfor%}
-            </select>
+        <div class="col-8"  style="    text-align: start;">
+          <form action="/sinh-vien?change=1" method="POST">
+            <div class="d-inline-block">
+              <select class="form-control" name="lop">
+                {% for item in list_lophoc %}
+                <option value={{ item[0] }}>{{ item[1] }} - {{ item[2] }}</option>
+                {% endfor%}
+              </select>
+            </div>
+            <div class="d-inline-block">
+              <button type="button" class="btn btn-primary" onclick="this.form.submit()">
+                Xem
+              </button>
+            </div>
+          </form>
         </div>
         <div class="col-4">
             <button type="button" class="btn btn-warning" onclick="window.location.href='train-data'">
               <i class="bi bi-shuffle"></i>Train Data
             </button>
-            {% if cb[9] == 2 %}
+            {% if cb.cb_quyentruycap == 2 %}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#thongTinSinhVien" title="Quản trị thêm mới 1 sinh viên">
               <i class="bi bi-plus me-1"></i>Thêm mới 
             </button>
@@ -35,8 +44,9 @@
                   <p class="text-center small">Điền thông tin chi tiết để cập nhật thông tin sinh viên - 
                       <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
                 </div>
+              
 
-                <form id="register-form" class="row g-3 needs-validation" action="/sinh-vien" method="POST" onsubmit="return validForm(event)">
+                <form id="register-form" class="row g-3 needs-validation" action="/sinh-vien" method="POST" onsubmit="return validForm(event)" >
                   <div class="col-6">
                     <label for="txtTenDayDu" class="form-label">Họ và tên <span style='color:red;font-weight:700;'>(*)</span></label>
                     <input type="text" name="fullname" class="form-control" id="txtTenDayDu"> 
@@ -73,6 +83,7 @@
                           <option value="{{ item[0] }}">{{ item[1] }} - {{ item[2] }}</option>
                           {% endfor%}
                         </select>
+                        <!--<input type="text" name="lop" class="form-control" id="txtLop" readonly=true> -->
                     </div>
                   </div>
                   <div class="col-6">
@@ -124,7 +135,7 @@
   </div>
   
 <div class="card">
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <!-- Table with stripped rows -->
       <table class="table table-striped">
         <thead>
@@ -155,7 +166,7 @@
                   <button type="button" class="btn btn-warning" title="Nạp dữ liệu khuôn mặt" onclick="window.location.href='\du-lieu-khuon-mat?svid={{ item[9] }}'"> 
                     <i class="ri-body-scan-fill"></i>
                   </button>
-                  {% if cb[9] == 2 %}
+                  {% if cb.cb_quyentruycap == 2 %}
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" title="Xóa sinh viên ra khỏi lớp"> 
                     <i class="bi bi-trash"></i>
                   </button>
@@ -198,7 +209,9 @@
     maso.value = data[0];
     email.value = data[4];
     phonenumber.value = data[5];
+    console.log(data[2])
     birthdate.value = data[2];
+    console.log(birthdate.value)
     address.value = data[3]
     lop.value = data[6];
     if(data[8] == 1){

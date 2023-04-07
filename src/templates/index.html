@@ -67,6 +67,12 @@
       {% if name_page == "monhoc" %}
         {% include  'monhoc.html' %}
       {% endif %}
+      {% if name_page == "nganhhoc" %}
+        {% include  'nganhhoc.html' %}
+      {% endif %}
+        {% if name_page == "khoa" %}
+        {% include  'khoa.html' %}
+      {% endif %}
       {% if name_page == "diemdanhkhuonmat" %}
         {% include  'diemdanh.html' %}
       {% endif %}
@@ -77,8 +83,16 @@
         {% include  'profile.html' %}
       {% endif %}
       {% if name_page == "thoikhoabieu" %}
-      {% include  'thoikhoabieu.html' %}
-        
+        {% include  'thoikhoabieu.html' %}
+      {% endif %}
+      {% if name_page == "bangdiemdanh" %}
+        {% include  'bangdiemdanh.html' %}
+      {% endif %}
+      {% if name_page == "sobuoivang" %}
+        {% include  'sobuoivang.html' %}
+      {% endif %}
+      {% if name_page == "gioday" %}
+        {% include  'thongkegioday.html' %}
       {% endif %}
     </section>  
   </main>

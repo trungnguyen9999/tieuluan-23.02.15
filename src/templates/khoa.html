@@ -1,24 +1,161 @@
-<html>
-<head>
-	<title>CRUD App</title>
-</head>
-<body>
-	<h1>CRUD App</h1>
-	<table>
-	<thead>
-		<tr>
-		<th>ID</th>
-		<th>Name</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for row in data %}
-		<tr>
-		<td>{{ row[1] }}</td>
-		<td>{{ row[2] }}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-	</table>
-</body>
-</html>
+
+<div class="col" style="text-align: end;margin: 10px;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Thêm mới
+      </button>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cập nhật Khoa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card-tao-canbo">
+              <div class="card-body">
+
+                <div class="pt-4 pb-2">
+                  <p class="text-center small"><span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                </div>
+
+                <form id="create-khoa-form" class="row g-3 needs-validation"
+                  action="/save-khoa-hoc" method="POST" onsubmit="return validForm(event)">
+
+                  <div class="col-12">
+                    <label for="txtMaKhoa" class="form-label">Mã Khoa <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <input type="text" name="maKhoa" class="form-control" id="txtmaKhoa"> 
+                    <div style='color:red;' id="msgMaKhoa"></div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="txtTenKhoa" class="form-label">Tên Khoa <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <input type="text" name="tenKhoa" class="form-control" id="txtTenKhoa">
+                    </div>
+                    <div style='color:red;' id="msgTenKhoa"></div>
+                  </div>
+                  </div>
+                 
+                  <div class="col-12">
+                    <button class="btn btn-primary w-100" type="submit" >Tạo thông tin Khoa</button>
+                  </div>
+                </form>
+              </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<div class="card">
+    <div class="card-body table-responsive">
+      <!-- Table with stripped rows -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Mã khoa</th>
+            <th scope="col">Tên khoa</th>
+            <th scope="col">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for num, item in list_khoa  %}
+
+            <tr>
+                <td>{{ num }}</td>
+                <td> <a href="https://{{ item.khoa_ma}}.ctu.edu.vn" target="_blank">{{ item.khoa_ma}}</a></td>
+                <td>{{ item.khoa_ten }}</td>
+                <td style="width: 110px;text-align: center;">
+                  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal{{item.khoa_id}}" > 
+                    <i class="ri-edit-2-line"></i>
+                  </button>
+                </td>
+              </tr>
+                  <div class="modal fade" id="updateModal{{item.khoa_id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="max-width: 500px;">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="updateModalLabel">Cập nhật khoa</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card-tao-canbo">
+                              <div class="card-body">
+                
+                                <div class="pt-4 pb-2">
+                                  <p class="text-center small"><span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                                </div>
+                
+                                <form id="update-khoa-hoc" class="row g-3 needs-validation" action="/save-khoa-hoc" method="POST" onsubmit="return validForm(event)">
+                                 
+                                  <div class="col-12">
+                                    <label for="txtMaKhoa" class="form-label">Mã khoa<span style='color:red;font-weight:700;'>(*)</span></label>
+                                    <input type="text" name="maKhoa" class="form-control" id="txtmaKhoa" value="{{item.khoa_ma}}">
+                                    <input type="text" name="idKhoa" class="form-control" id="txtmaKhoa" value="{{item.khoa_id}}" style="display:none">
+                                    <div style='color:red;' id="msgMaKhoa"></div>
+                                  </div>
+                
+                                  <div class="col-12">
+                                    <label for="txtTenKhoa" class="form-label">Tên khoa<span style='color:red;font-weight:700;'>(*)</span></label>
+                                    <div class="input-group has-validation">
+                                      <input type="text" name="tenKhoa" class="form-control" id="txtTenKhoa" value="{{item.khoa_ten}}">
+                                    </div>
+                                    <div style='color:red;' id="msgTenKhoa"></div>
+                                  </div>
+                                  <br>
+                                 
+                                  <div class="col-12">
+                                    <button class="btn btn-primary w-100" type="submit" >Cập nhật Khoa</button>
+                                  </div>
+                                </form>
+                              </div>
+                              </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+      
+    </div>
+</div>
+<script>
+  const maKhoa = document.getElementById("txtMaKhoa");
+  const tenKhoa = document.getElementById("txtTenKhoa");
+
+
+  const msgMaKhoa = document.getElementById("msgKhoaMa");
+  const msgTenKhoa = document.getElementById("msgKhoaTen");
+
+
+  function validForm(e) {
+    let isValid = true;
+    if(maKhoa.value === ''){
+      isValid = false;
+      msgMaKhoa.textContent = 'Vui lòng điền mã Khoa !';
+    } else {
+      msgMaKhoa.textContent = '';
+    }
+
+    if(tenMon.value === ''){
+      isValid = false;
+      msgTenKhoa.textContent = 'Vui lòng điền tên Khoa!';
+    } else {
+      msgTenKhoa.textContent = '';
+    }
+    console.log(isValid); 
+    if(!isValid){
+      e.preventDefault(); 
+    }
+    return isValid;
+  } 
+
+    
+  </script>

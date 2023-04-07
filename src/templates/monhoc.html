@@ -1,213 +1,222 @@
 
-<div class="col" style="text-align: start;margin: 10px;">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Thêm mới
-      </button>
+<div class="col" style="text-align: end;margin: 10px;">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Thêm mới
+    </button>
 </div>
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 800px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Cập nhật môn học</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="card-tao-canbo">
-              <div class="card-body">
+  <div class="modal-dialog" style="max-width: 500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cập nhật môn học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="card-tao-canbo">
+            <div class="card-body">
 
-                <div class="pt-4 pb-2">
-                  <p class="text-center small">Điền thông tin chi tiết để tạo môn học - 
-                      <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+              <div class="pt-4 pb-2">
+                <p class="text-center small">
+                    <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+              </div>
+
+              <form id="create-monhoc-form" class="row g-3 needs-validation"
+               action="/save-mon-hoc" method="POST" onsubmit="return validForm(event)">
+               
+                <div class="col-12">
+                  <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <input type="text" name="maMon" class="form-control" id="txtmaMon" required="1"> 
+                  <div style='color:red;' id="msgMaMon"></div>
                 </div>
 
-                <form id="create-monhoc-form" class="row g-3 needs-validation"
-                 action="/save-mon-hoc" method="POST" onsubmit="return validForm(event)">
-                 
-                  <div class="col-6">
-                    <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
-                    <input type="text" name="maMon" class="form-control" id="txtmaMon" required="1"> 
-                    <div style='color:red;' id="msgMaMon"></div>
+                <div class="col-12">
+                  <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">
+                    <input type="text" name="tenMon" class="form-control" id="txtTenMon" required="1">
                   </div>
-
-                  <div class="col-6">
-                    <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div style='color:red;' id="msgTenMon"></div>
+                </div>
+                <div class="col-12">
+                  <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">
+                    <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" required>
+                  </div>
+                  <div style='color:red;' id="msgSoTinChi"></div>
+                </div>
+                <div class="col-12">
+                    <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
                     <div class="input-group has-validation">
-                      <input type="text" name="tenMon" class="form-control" id="txtTenMon" required="1">
+                      <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" required>
                     </div>
-                    <div style='color:red;' id="msgTenMon"></div>
+                    <div style='color:red;' id="msgLytThuyet"></div>
+                </div>
+                <div class="col-12">
+                  <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">
+                    <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" required>
                   </div>
-                  <div class="col-6">
-                    <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
-                    <div class="input-group has-validation">
-                      <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" required>
-                    </div>
-                    <div style='color:red;' id="msgSoTinChi"></div>
-                  </div>
-                  <div class="col-6">
-                      <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
-                      <div class="input-group has-validation">
-                        <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" required>
-                      </div>
-                      <div style='color:red;' id="msgLytThuyet"></div>
-                  </div>
-                  <div class="col-6">
-                    <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
-                    <div class="input-group has-validation">
-                      <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" readonly>
-                    </div>
-                    <div style='color:red;' id="msgThucHanh"></div>
-                  </div>
-                 
-                  <div class="col-12">
-                    <button class="btn btn-primary w-100" type="submit" >Tạo thông tin Môn học</button>
-                  </div>
-                </form>
-              </div>
-              </div>
-        </div>
+                  <div style='color:red;' id="msgThucHanh"></div>
+                </div>
+               
+                <div class="col-12">
+                  <button class="btn btn-primary w-100" type="submit" >Tạo thông tin Môn học</button>
+                </div>
+              </form>
+            </div>
+            </div>
       </div>
     </div>
   </div>
+</div>
 
-  
+
 <div class="card">
-    <div class="card-body">
-      <!-- Table with stripped rows -->
-      <table class="table table-striped">
-        <thead>
+  <div class="card-body table-responsive">
+    <!-- Table with stripped rows -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">STT</th>
+          <th scope="col">Mã môn</th>
+          <th scope="col">Tên môn</th>
+          <th scope="col">Số tín chỉ</th>
+          <th scope="col">Lý thuyết</th>
+          <th scope="col">Thực hành</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for monhoc in monhocs  %}
           <tr>
-            <th scope="col">STT</th>
-            <th scope="col">Mã môn</th>
-            <th scope="col">Tên môn</th>
-            <th scope="col">Số tín chỉ</th>
-            <th scope="col">Lý thuyết</th>
-            <th scope="col">Thực hành</th>
-            <th scope="col">Hành động</th>
+              <td>{{ loop.index}}</th>
+              <td><a href="https://www.cit.ctu.edu.vn/decuong/{{ monhoc.mh_maso }}.pdf" target="_blank">{{ monhoc.mh_maso }}</a></td>
+              <td>{{ monhoc.mh_ten }}</td>
+              <td>{{ monhoc.mh_sotinchi }}</td>
+              <td>{{ monhoc.mh_lythuyet }}</td>
+              <td>{{ monhoc.mh_thuchanh }}</td>
+              <td>
+                <div class="row">
+                  <form id="delete-monhoc-form" method="POST" action="/delete-mon-hoc">
+                  <input type="hidden" name="monhoc_id" value="{{ monhoc.mh_id }}">
+                  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal{{monhoc.mh_id}}"> 
+                    <i class="ri-edit-2-line"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" > 
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  </form>
+                </div>
+              </td>
           </tr>
-        </thead>
-        <tbody>
-            {% for monhoc in monhocs  %}
-            <tr>
-                <td>{{ loop.index}}</th>
-                <td>{{ monhoc.mh_maso }}</td>
-                <td>{{ monhoc.mh_ten }}</td>
-                <td>{{ monhoc.mh_sotinchi }}</td>
-                <td>{{ monhoc.mh_lythuyet }}</td>
-                <td>{{ monhoc.mh_thuchanh }}</td>
-                <td>
-                  <button class="btn btn-success w-40" type="button" data-bs-toggle="modal" data-bs-target="#updateModal{{monhoc.mh_id}}" >Cập nhật</button>
-                  <button class="btn btn-danger w-25" >Xóa</button>
-                  
-                </td>
-            </tr>
-            <div class="modal fade" id="updateModal{{monhoc.mh_id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-              <div class="modal-dialog" style="max-width: 800px;">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Cập nhật môn học</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                      <div class="card-tao-canbo">
-                        <div class="card-body">
-          
-                          <div class="pt-4 pb-2">
-                            <p class="text-center small">Điền thông tin chi tiết để cập nhật môn học - 
-                                <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+          <div class="modal fade" id="updateModal{{monhoc.mh_id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="max-width: 500px;">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateModalLabel">Cập nhật môn học</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-tao-canbo">
+                      <div class="card-body">
+        
+                        <div class="pt-4 pb-2">
+                          <p class="text-center small">
+                              <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                        </div>
+        
+                        <form id="update-monhoc-form" class="row g-3 needs-validation"
+                         action="/save-mon-hoc" method="POST" onsubmit="return validForm(event)">
+                         
+                          <div class="col-12">
+                            <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                            <input type="text" name="maMon" class="form-control" id="txtmaMon" value="{{monhoc.mh_maso}}"> 
+                            <input type="text" name="idMon" class="form-control" id="txtidMon" value="{{monhoc.mh_id}}" style="display:none">  
+                            <div style='color:red;' id="msgMaMon"></div>
                           </div>
-          
-                          <form id="update-monhoc-form" class="row g-3 needs-validation"
-                           action="/update-mon-hoc" method="POST" onsubmit="return validForm(event)">
-                           
-                            <div class="col-6">
-                              <label for="txtMaMon" class="form-label">Mã môn <span style='color:red;font-weight:700;'>(*)</span></label>
-                              <input type="text" name="maMon" class="form-control" id="txtmaMon" value="{{monhoc.mh_id}}"> 
-                              <div style='color:red;' id="msgMaMon"></div>
+        
+                          <div class="col-12">
+                            <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                            <div class="input-group has-validation">
+                              <input type="text" name="tenMon" class="form-control" id="txtTenMon" value="{{monhoc.mh_ten}}">
                             </div>
-          
-                            <div class="col-6">
-                              <label for="txtTenMon" class="form-label">Tên môn <span style='color:red;font-weight:700;'>(*)</span></label>
+                            <div style='color:red;' id="msgTenMon"></div>
+                          </div>
+                          <div class="col-12">
+                            <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
+                            <div class="input-group has-validation">
+                              <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" value="{{monhoc.mh_sotinchi}}">
+                            </div>
+                            <div style='color:red;' id="msgSoTinChi"></div>
+                          </div>
+                          <div class="col-12">
+                              <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
                               <div class="input-group has-validation">
-                                <input type="text" name="tenMon" class="form-control" id="txtTenMon" value="{{monhoc.mh_id}}">
+                                <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" value="{{monhoc.mh_lythuyet}}">
                               </div>
-                              <div style='color:red;' id="msgTenMon"></div>
+                              <div style='color:red;' id="msgLytThuyet"></div>
+                          </div>
+                          <div class="col-12">
+                            <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
+                            <div class="input-group has-validation">
+                              <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" value="{{monhoc.mh_thuchanh}}">
                             </div>
-                            <div class="col-6">
-                              <label for="txtSoTinChi" class="form-label">Số tín chỉ <span style='color:red;font-weight:700;'>(*)</span></label>
-                              <div class="input-group has-validation">
-                                <input type="number" min="0" name="soTinChi" class="form-control" id="txtSoTinChi" value="{{monhoc.mh_id}}">
-                              </div>
-                              <div style='color:red;' id="msgSoTinChi"></div>
-                            </div>
-                            <div class="col-6">
-                                <label for="txtLyThuyet" class="form-label">Lý thuyết <span style='color:red;font-weight:700;'>(*)</span></label>
-                                <div class="input-group has-validation">
-                                  <input type="number" min="0" name="lyThuyet" class="form-control" id="txtLyThuyet" value="{{monhoc.mh_id}}">
-                                </div>
-                                <div style='color:red;' id="msgLytThuyet"></div>
-                            </div>
-                            <div class="col-6">
-                              <label for="txtThucHanh" class="form-label">Thực hành <span style='color:red;font-weight:700;'>(*)</span></label>
-                              <div class="input-group has-validation">
-                                <input type="number" min="0" name="thucHanh" class="form-control" id="txtThucHanh" value="{{monhoc.mh_id}}">
-                              </div>
-                              <div style='color:red;' id="msgThucHanh"></div>
-                            </div>
-                           
-                            <div class="col-12">
-                              <button class="btn btn-primary w-100" type="submit" >Cập nhật môn học</button>
-                            </div>
-                          </form>
-                        </div>
-                        </div>
-                  </div>
+                            <div style='color:red;' id="msgThucHanh"></div>
+                          </div>
+                          <br>
+                          <div class="col-12">
+                            <button class="btn btn-primary w-100" type="submit" >Cập nhật môn học</button>
+                          </div>
+                        </form>
+                      </div>
+                      </div>
                 </div>
               </div>
             </div>
-            {% endfor %}
-            
-        </tbody>
-      </table>
-      <!-- End Table with stripped rows -->
-      
-    </div>
+          </div>
+          {% endfor %}
+          
+      </tbody>
+    </table>
+    <!-- End Table with stripped rows -->
+    
+  </div>
 </div>
 <script>
-  const maMon = document.getElementById("txtMaMon");
-  const tenMon = document.getElementById("txtTenMon");
-  const soTinChi = document.getElementById("txtSoTinChi");
-  const lyThuyet = document.getElementById("txtLyThuyet");
-  const thucHanh = document.getElementById("txtThucHanh");
+const maMon = document.getElementById("txtMaMon");
+const tenMon = document.getElementById("txtTenMon");
+const soTinChi = document.getElementById("txtSoTinChi");
+const lyThuyet = document.getElementById("txtLyThuyet");
+const thucHanh = document.getElementById("txtThucHanh");
 
-  const msgMaMon = document.getElementById("msgHoVaTen");
-  const msgTenMon = document.getElementById("msgTenDangNhap");
-  const msgSoTinChi = document.getElementById("msgMatKhau");
-  const msgLyThuyet = document.getElementById("msgReMatKhau");
-  const msgThucHanh = document.getElementById("msgEmail");
+const msgMaMon = document.getElementById("msgHoVaTen");
+const msgTenMon = document.getElementById("msgTenDangNhap");
+const msgSoTinChi = document.getElementById("msgMatKhau");
+const msgLyThuyet = document.getElementById("msgReMatKhau");
+const msgThucHanh = document.getElementById("msgEmail");
 
-  function validForm(e) {
-    let isValid = true;
-    if(maMon.value === ''){
-      isValid = false;
-      msgMaMon.textContent = 'Vui lòng điền mã môn !';
-    } else {
-      msgMaMon.textContent = '';
-    }
+function validForm(e) {
+  let isValid = true;
+  if(maMon.value === ''){
+    isValid = false;
+    msgMaMon.textContent = 'Vui lòng điền mã môn !';
+  } else {
+    msgMaMon.textContent = '';
+  }
 
-    if(tenMon.value === ''){
-      isValid = false;
-      msgTenMon.textContent = 'Vui lòng điền tên môn!';
-    } else {
-      msgTenMon.textContent = '';
-    }
-    console.log(isValid); 
-    if(!isValid){
-      e.preventDefault(); 
-    }
-    return isValid;
-  } 
+  if(tenMon.value === ''){
+    isValid = false;
+    msgTenMon.textContent = 'Vui lòng điền tên môn!';
+  } else {
+    msgTenMon.textContent = '';
+  }
+  console.log(isValid); 
+  if(!isValid){
+    e.preventDefault(); 
+  }
+  return isValid;
+} 
 
-    
-  </script>
+  
+</script>

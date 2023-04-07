@@ -20,7 +20,7 @@ class SinhVien:
         conn = dp.connect()
         cur = conn.cursor()
         try:
-            cur.execute("SELECT sv_maso, sv_hoten, cast(sv_ngaysinh as text), sv_diachi, sv_email, sv_dienthoai, lh.lop_maso, coalesce(sv_hinh, ''), sv_gioitinh, sv_id \
+            cur.execute("SELECT sv_maso, sv_hoten, cast(sv_ngaysinh as text), sv_diachi, sv_email, sv_dienthoai, lh.lop_maso || ' - ' || lh.lop_ten, coalesce(sv_hinh, ''), sv_gioitinh, sv_id \
                 FROM sinhvien sv \
                 INNER JOIN lophoc lh USING (lop_id)\
                 where lop_id = %s", (lop_id,))
