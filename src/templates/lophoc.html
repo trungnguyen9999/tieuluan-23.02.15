@@ -1,0 +1,205 @@
+<div class="col" style="text-align: start;margin: 10px;">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLopHoc">
+      Thêm mới
+    </button>
+</div>
+
+<div class="modal fade" id="modalLopHoc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 800px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cập nhật lớp học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="card-tao-canbo">
+            <div class="card-body">
+
+              <div class="pt-4 pb-2">
+                <p class="text-center small">Điền thông tin chi tiết để tạo lớp học - 
+                    <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+              </div>
+
+              <form id="create-lophoc-form" class="row g-3 needs-validation"
+               action="/save-lop-hoc" method="POST" onsubmit="return validForm(event)">
+               
+                <div class="col-6">
+                  <label for="txtMaLop" class="form-label">Mã Lớp <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <input type="text" name="maLop" class="form-control" id="txtMaLop" required="1"> 
+                  <div style='color:red;' id="msgMaLop"></div>
+                </div>
+
+                <div class="col-6">
+                  <label for="txtTenLop" class="form-label">Tên lớp <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">  
+                    <input type="text" name="tenLop" class="form-control" id="txtTenLop" required="1">
+                  </div>
+                  <div style='color:red;' id="msgTenLop"></div>
+                </div>
+                <div class="col-6">
+                  <label for="txtSoLuongSV" class="form-label">Số Lượng SV <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">
+                    <input type="number" min="0" name="soLuongSV" class="form-control" id="txtSoLuongSV" required>
+                  </div>
+                  <div style='color:red;' id="msgSoLuongSV"></div>
+                </div>
+                <div class="col-6">
+                    <label for="txtCoVan" class="form-label">Cố vấn <span style='color:red;font-weight:700;'>(*)</span></label>
+                    <div class="input-group has-validation">
+                      <input type="number" min="0" name="coVan" class="form-control" id="txtCoVan" required>
+                    </div>
+                    <div style='color:red;' id="msgLytThuyet"></div>
+                </div>
+                <div class="col-6">
+                  <label for="txtNghanhHoc" class="form-label">Ngành học <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">
+                    <input type="number" min="0" name="nganhHoc" class="form-control" id="txtNghanhHoc" required>
+                  </div>
+                  <div style='color:red;' id="msgNghanhHoc"></div>
+                </div>
+
+                <div class="col-6">
+                  <label for="txtNienKhoa" class="form-label">Niên khóa <span style='color:red;font-weight:700;'>(*)</span></label>
+                  <div class="input-group has-validation">
+                    <input type="number" min="0" name="nienkhoa" class="form-control" id="txtNienKhoa" required>
+                  </div>
+                  <div style='color:red;' id="msgNienKhoa"></div>
+                </div>
+               
+                <div class="col-12">
+                  <button class="btn btn-primary w-100" type="submit" >Tạo thông tin lớp học</button>
+                </div>
+              </form>
+            </div>
+            </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<div class="card">
+    <div class="card-body">
+      <!-- Table with stripped rows -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Mã lớp</th>
+            <th scope="col">Tên lớp</th>
+            <th scope="col">Số lượng SV</th>
+            <th scope="col">Cố vấn</th>
+            <th scope="col">Ngành học</th>
+            <th scope="col">Niên khóa</th>
+            <th scope="col">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for lophoc in lophocs  %}
+            <tr>
+                <td>{{ loop.index}}</th>
+                <td>{{ lophoc.lop_maso }}</td>
+                <td>{{ lophoc.lop_ten }}</td>
+                <td>{{ lophoc.lop_soluong_sv }}</td>
+                <td>{{ lophoc.lop_convan }}</td>
+                <td>{{ lophoc.nh_id }}</td>
+                <td>{{ lophoc.nienkhoa }}</td>
+                <td>  
+                  <form id="delete-lop-form" method="POST" action="/delete-lop-hoc">
+                    <input type="hidden" name="lop_id" value="{{ lophoc.lop_id}}">
+                    <button class="btn btn-success w-30" type="button" data-bs-toggle="modal" data-bs-target="#updateModal{{lophoc.lop_id}}" >Cập nhật</button>
+                    <button class="btn btn-danger w-30" type="submit" onclick="return confirmDelete()">Xóa</button>
+                  </form>
+                </td>
+            </tr>
+
+            <div class="modal fade" id="updateModal{{lophoc.lop_id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+              <div class="modal-dialog" style="max-width: 800px;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Cập nhật lớp học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="card-tao-canbo">
+                        <div class="card-body">
+          
+                          <div class="pt-4 pb-2">
+                            <p class="text-center small">Điền thông tin chi tiết để cập nhật môn học - 
+                                <span style='color:red;font-weight:700;'>(*)</span> là các giá trị bắt buộc.</p>
+                          </div>
+          
+                          <form id="update-lophoc-form" class="row g-3 needs-validation"
+                           action="/save-lop-hoc" method="POST" onsubmit="return validForm(event)">
+                           
+                            <div class="col-6">
+                              <label for="txtMaMon" class="form-label">Mã lớp <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <input type="hidden" name="idLop" class="form-control" id="txtIdLop" value="{{lophoc.lop_id}}"> 
+                              <input type="text" name="maLop" class="form-control" id="txtMaLop" value="{{lophoc.lop_maso}}"> 
+                              <div style='color:red;' id="msgMaLop"></div>
+                            </div>
+          
+                            <div class="col-6">
+                              <label for="txtTenLop" class="form-label">Tên lớp <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="text" name="tenLop" class="form-control" id="txtTenLop" value="{{lophoc.lop_ten}}">
+                              </div>
+                              <div style='color:red;' id="msgTenLop"></div>
+                            </div>
+                            <div class="col-6">
+                              <label for="txtSoLuongSV" class="form-label">Số Lượng SV <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="number" min="0" name="soLuongSV" class="form-control" id="txtSoLuongSV" value="{{lophoc.lop_soluong_sv}}">
+                              </div>
+                              <div style='color:red;' id="msgSoLuongSV"></div>
+                            </div>
+                            <div class="col-6">
+                                <label for="txtCoVan" class="form-label">Cố Vấn <span style='color:red;font-weight:700;'>(*)</span></label>
+                                <div class="input-group has-validation">
+                                  <input type="number" min="0" name="coVan" class="form-control" id="txtCoVan" value="{{lophoc.lop_convan}}">
+                                </div>
+                                <div style='color:red;' id="msgCoVan"></div>
+                            </div>
+                            <div class="col-6">
+                              <label for="txtNghanhHoc" class="form-label">Ngành <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="number" min="0" name="nganhHoc" class="form-control" id="txtNghanhHoc" value="{{lophoc.nh_id}}">
+                              </div>
+                              <div style='color:red;' id="msgNghanhHoc"></div>
+                            </div>
+
+                            <div class="col-6">
+                              <label for="txtNienKhoa" class="form-label">Niên Khóa <span style='color:red;font-weight:700;'>(*)</span></label>
+                              <div class="input-group has-validation">
+                                <input type="number" min="0" name="nienkhoa" class="form-control" id="txtNienKhoa" value="{{lophoc.nienkhoa}}">
+                              </div>
+                              <div style='color:red;' id="msgNienKhoa"></div>
+                            </div>
+                           
+                            <div class="col-12">
+                              <button class="btn btn-primary w-100" type="submit" >Cập nhật lớp học</button>
+                            </div>
+                          </form>
+                        </div>
+                        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+    </div>
+</div>
+
+<script>
+
+function confirmDelete() {
+        if (confirm("Bạn có chắc chắn muốn xóa?")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
