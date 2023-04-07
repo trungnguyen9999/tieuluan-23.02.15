@@ -125,7 +125,7 @@ def get_Dulieu_Khuonmat():
 def get_sinhvien():
     if('user' in session and 'type-account' in session and session['type-account'] == 2):
         cbmaso = session['user']
-        _listlop = objLopHoc.get_lophoc_list("-1")
+        _listlop = LopHoc.get_lophoc_list("-1")
         return render_template('index.html', 
             cb=CanBo.get_canbo_by_maso(cbmaso), 
             list_sinhvien=objSinhVien.get_sinhvien_list(_listlop[0][0]), 

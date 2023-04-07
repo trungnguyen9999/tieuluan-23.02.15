@@ -1,6 +1,8 @@
+from database import db
 import psycopg2
 import dataprovider as dp
-from database import db
+from sqlalchemy import text
+
 
 class LopHoc(db.Model):
     __tablename__ = 'lophoc'
@@ -23,8 +25,9 @@ class LopHoc(db.Model):
         
     @staticmethod
     def get_lop():
-        lophocs = LopHoc.query.order_by(LopHoc.lop_id.desc()).all()
-        return lophocs
+        query = text("SELECT lh.*,nh_ten, cb.cb_hoten FROM lophoc lh join nganhhoc nh on lh.nh_id = nh.nh_id join canbo cb on lh.lop_convan = cb.cb_id order by lh.lop_id desc")
+        result = db.session.execute(query)
+        return result
 
     @staticmethod
     def save_lophoc(lop_id, lop_maso, lop_ten, lop_soluong_sv, lop_convan, nh_id, nienkhoa):
@@ -59,7 +62,7 @@ class LopHoc(db.Model):
             return False
         
         
-    def get_lophoc_list(self, cbmaso):
+    def get_lophoc_list(cbmaso):
         conn = dp.connect()
         cur = conn.cursor()
         try:
