@@ -13,6 +13,7 @@ from model.MonHoc import MonHoc
 from model.Khoa import Khoa
 from model.NganhHoc import NganhHoc
 from model.DiemDanh import DiemDanh
+from model.LopHoc import LopHoc
 from database import db
 
 app = Flask(__name__)
@@ -30,7 +31,7 @@ with app.app_context():
 CanBo = CanBo.CanBo()
 objSinhVien = SinhVien.SinhVien()
 sinhVien=None
-objLopHoc = LopHoc.LopHoc()
+objLopHoc = LopHoc
 objThoiKhoaBieu = ThoiKhoaBieu.ThoiKhoaBieu()
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 pathData = "../src/dataset/"
@@ -678,6 +679,50 @@ def gio_day():
             list_lophoc = objLopHoc.get_lophoc_list(cbmaso),
             name_page="gioday", tieude="Thống kê số giờ dạy")
     return render_template('login.html')
+
+
+#*********************************************** Lớp học **************************************************
+@app.route('/lop-hoc') 
+def list_lophoc():
+    if('user' in session and 'type-account' in session and session['type-account'] == 2):
+        cbmaso = session['user']
+        ds_lophoc = LopHoc.get_lop()
+        return render_template('index.html', cb=CanBo.get_canbo_by_maso(cbmaso), lophocs=ds_lophoc, name_page="lophoc", tieude="Quản lý lớp học")
+    return render_template('login.html')
+
+@app.route('/save-lop-hoc', methods=['GET','POST'])
+def actionSaveLopHoc():
+    message = ""
+    lopId = request.form.get('idLop')
+    lopMa = request.form.get('maLop')
+    lopTen = request.form.get('tenLop')
+    soLuongSV = request.form.get('soLuongSV')
+    coVanId = request.form.get('coVan')
+    nhId = request.form.get('nganhHoc')
+    nienKhoa = request.form.get('nienkhoa')
+    result = LopHoc.save_lophoc(lopId, lopMa, lopTen, soLuongSV, coVanId, nhId, nienKhoa)
+    
+    if result == None:
+       message = "Mã lớp đã tồn tại"
+    #    print("-------> " + message)   
+       
+    cbmaso = session['user']
+    ds_lophoc = LopHoc.get_lop()
+    return render_template('index.html', cb=CanBo.get_canbo_by_maso(cbmaso), lophocs=ds_lophoc, name_page="lophoc", tieude="Quản lý lớp học",mes =message)
+@app.route('/delete-lop-hoc', methods=['POST'])
+def actionDeletedLopHoc():
+    
+    lopId = request.form.get('lop_id')
+    print("---------Xóa lớp học" + str(lopId))
+    rs = LopHoc.delete_lophoc_by_id(lopId)
+    if rs:
+        message = "Xóa thành công"
+    else:
+        message = "Không thể xóa lớp học"
+        
+    cbmaso = session['user']
+    ds_lophoc = LopHoc.get_lop()
+    return render_template('index.html', cb=CanBo.get_canbo_by_maso(cbmaso), lophocs=ds_lophoc, name_page="lophoc", tieude="Quản lý lớp học",mes =message)
 
 
 
